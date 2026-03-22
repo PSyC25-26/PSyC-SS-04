@@ -1,0 +1,41 @@
+#principal{
+    background-color: lightgray;
+
+    border-color: black;
+    border-width: 3px;
+    border-style: solid;
+    margin: 5px;
+
+    display: flex;
+}
+
+h1{
+    font-size: 40px;
+}
+
+header{
+    text-align: center;
+}
+
+footer{
+    background-color: burlywood;
+
+    border-width: 2px;
+    border-style: dotted;
+    border-radius: 2px;
+
+    padding: 10px;
+
+    margin: 10%;
+}
+
+.boton_iniciar{
+    height: 300px;
+    width: 400px;
+
+}
+
+body{
+    background-color: bisque;
+    
+}
