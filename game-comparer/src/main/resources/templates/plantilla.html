@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/estilos.css}">
+    <title>Bienvenido</title>
+</head>
+<body>
+    <header>
+
+        <h1>Bienvenido a tu comparador de juegos de confianza</h1>
+
+    </header>
+
+    <div id="principal">
+        <span id="botones_inicio">
+            <a class="boton_iniciar" th:href="@{/registro}">
+                <div>REGISTRATE</div>
+            </a>
+
+            <a class="boton_iniciar" th:href="@{/inicioSesion}">
+                <div>INICIA SESIÓN</div>
+            </a>
+        </span>
+    </div>
+    
+    <footer>   
+        <h2>Todos los derechos reservados</h2>
+        <ul>
+            <li>Steam</li>
+            <li>Epic Games Sotre</li>
+            <li>Equipo desarrollador de la web</li>
+        </ul>
+    </footer>
+</body>
+</html>
