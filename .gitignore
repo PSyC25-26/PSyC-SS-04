@@ -26,3 +26,8 @@ replay_pid*
 # Custom IDE folders
 .idea
 .vscode
+
+# Eclipse files
+.classpath
+.project
+.settings/
