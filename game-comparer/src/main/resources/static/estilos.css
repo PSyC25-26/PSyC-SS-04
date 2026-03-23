@@ -1,12 +1,21 @@
 #principal{
     background-color: lightgray;
 
-    border-color: black;
-    border-width: 3px;
-    border-style: solid;
+    border-radius: 20px;
     margin: 5px;
 
+    padding: 5%;
+
+    margin-left: 10%;
+    margin-right: 10%;
+
+}
+
+#botones_inicio{
     display: flex;
+
+    justify-content: center;
+    align-items: center;    
 }
 
 h1{
@@ -30,8 +39,23 @@ footer{
 }
 
 .boton_iniciar{
-    height: 300px;
-    width: 400px;
+    font-size: 17px;
+    text-decoration: none;
+
+    padding: 70px;
+    padding: 50px 5px;
+
+    background-color: rgba(70, 186, 70, 0.992);
+
+    border-color: rgb(0, 116, 0);
+    border-radius: 23px;
+    border-width: 1,5px;
+    border-style: solid;
+
+    height: 30px;
+    width: 140px;
+
+    text-align: center;
 
 }
 
