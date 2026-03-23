@@ -12,30 +12,30 @@
     <div id="div_inicio_y_registro">
         <h2><strong>Inicio de sesión</strong></h2>
 
-        <form action="nada_aun" method="post">
+        <form th:action="@{/registro}" th:object="${usuario}" method="post">
 
-            <label for="Nombre_usuario" class="label_texto">Nombre de usuario: </label>
-            <input type="text" name="Nombre_usuario">
-
-        </br>
-
-            <label for="Email_usuario" class="label_texto">Email del usuario: </label>
-            <input type="email" name="Email_usuario">
+            <label for="name" class="label_texto">Nombre de usuario: </label>
+            <input type="text" name="name" th:field="*{name}" placeholder="Nombre"> 
 
         </br>
 
-            <label for="Contra_usuario" class="label_texto">Contraseña: </label>
-            <input type="password" name="Contra_usuario">
+            <label for="email" class="label_texto">Email del usuario: </label>
+            <input type="email" name="email" th:field="*{email}" placeholder="Email">
 
         </br>
 
-            <label for="Fecha_nac_usuario" class="label_texto">Fecha de nacimiento: </label>
-            <input type="date" name="Fecha_nac_usuario">
+            <label for="contrasena" class="label_texto">Contraseña: </label>
+            <input type="password" name="contrasena" th:field="*{contrasena}" placeholder="Contraseña">
 
         </br>
 
-            <label for="Pais_usuario" class="label_texto">País de residencia: </label>
-            <input type="text" name="Pais_usuario">
+            <label for="fecha_nac" class="label_texto">Fecha de nacimiento: </label>
+            <input type="date" name="fecha_nac" th:field="*{fecha_nac}">
+
+        </br>
+
+            <label for="pais" class="label_texto">País de residencia: </label>
+            <input type="text" name="pais" th:field="*{pais}" placeholder="País">
         
         </br>
 
