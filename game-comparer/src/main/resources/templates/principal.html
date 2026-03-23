@@ -1,6 +1,8 @@
-
+<!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-
+<link rel="stylesheet" th:href="@{/estilos.css}">
+<body>
+    <header th:replace="plantilla :: headerPlant"></header>
 
     <div id="principal">
         <span id="botones_inicio">
@@ -14,4 +16,6 @@
         </span>
     </div>
 
+    <footer th:replace="plantilla :: footerPlant"></footer>
+</body>
 </html>

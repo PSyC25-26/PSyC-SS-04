@@ -6,14 +6,14 @@
     <link rel="stylesheet" th:href="@{/estilos.css}">
     <title>PlantillaTH</title>
 </head>
-<body>
+<body th:fragment="bodyPlant">
     <header th:fragment="headerPlant">
 
         <h1>Bienvenido a tu comparador de juegos de confianza</h1>
 
     </header>
     
-    <div th:insert="~{principal.html}">
+    <div th:fragment="cuerpoExtra">
 
     </div>
 
