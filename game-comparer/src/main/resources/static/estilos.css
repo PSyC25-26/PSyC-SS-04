@@ -22,7 +22,7 @@ footer{
 
     border-width: 2px;
     border-style: dotted;
-    border-radius: 2px;
+    border-radius: 20px;
 
     padding: 10px;
 
@@ -38,4 +38,24 @@ footer{
 body{
     background-color: bisque;
     
+}
+
+#div_inicio_ses{
+    text-align: center;
+
+    border-style: solid;
+    border-color: darkslategray;
+    border-width: 2,5px;
+    border-radius: 20px;
+
+    background-color: green;
+
+    margin-left: 10%;
+    margin-right: 10%;
+
+    margin-top: 5%;
+}
+
+.label_texto{
+    font-size: 20px;
 }

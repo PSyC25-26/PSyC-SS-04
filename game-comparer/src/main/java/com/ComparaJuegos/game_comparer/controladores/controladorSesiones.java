@@ -10,7 +10,7 @@ public class controladorSesiones {
     @GetMapping("/iniciar")
 
     public String inicio(){
-        return "plantilla";
+        return "principal";
     }
 
     @GetMapping("/inicioSesion")
