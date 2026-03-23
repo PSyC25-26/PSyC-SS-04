@@ -2,9 +2,11 @@ package com.ComparaJuegos.game_comparer;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration;
+import org.springframework.boot.persistence.autoconfigure.EntityScan;
 
-@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
+
+@SpringBootApplication
+@EntityScan("com.ComparaJuegos.game_comparer.models")
 public class GameComparerApplication {
 
 	public static void main(String[] args) {
