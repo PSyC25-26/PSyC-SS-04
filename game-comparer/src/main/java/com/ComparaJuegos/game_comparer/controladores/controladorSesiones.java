@@ -33,6 +33,12 @@ public class controladorSesiones {
         return "registro";
     }
 
+    @GetMapping("/prueba_login") // Esta es la "dirección" de la prueba
+    public String paginaDePrueba() {
+        // Este String "home" debe ser el nombre exacto de tu archivo home.html
+        return "prueba_login";
+    }
+
     //Necesario para que funcione lo siguiente, sino se queja
     private final UsuarioRepositorio usuarioRepositorio;
 
