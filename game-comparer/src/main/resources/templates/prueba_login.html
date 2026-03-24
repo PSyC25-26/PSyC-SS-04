@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>prueba_login</title>
+</head>
+<body>
+
+<h1>Bienvenido, <span th:text="${#authentication.name}">Nombre de Usuario</span></h1>
+
+<p>Es funcional : )</p>
+
+<form th:action="@{/logout}" method="post">
+    <button type="submit">Cerrar Sesión</button>
+</form>
+
+</body>
+</html>

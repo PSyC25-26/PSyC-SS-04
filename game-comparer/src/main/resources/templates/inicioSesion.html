@@ -12,24 +12,13 @@
     <div id="div_inicio_y_registro">
         <h1><strong>Inicio de sesión</strong></h1>
 
-        <form action="nada_aun" method="post">
+        <form th:action="@{/inicioSesion}" method="post">
 
-            <label for="Nombre_usuario" class="label_texto">Nombre de usuario: </label>
-            <input type="text" name="Nombre_usuario">
-
-        </br>
-
-            <label for="Email_usuario" class="label_texto">Email del usuario: </label>
-            <input type="email" name="Email_usuario">
-
-        </br>
-
-            <label for="Contra_usuario" class="label_texto">Contraseña: </label>
-            <input type="password" name="Contra_usuario">
-
-        </br>
-
-            <input type="submit" value="Confirmar">
+            <input type="text" name="username" placeholder="Email">
+            <br>
+            <input type="password" name="password" placeholder="Contraseña">
+            <br>
+            <button type="submit">Entrar</button>
 
         </form>
     </div>
