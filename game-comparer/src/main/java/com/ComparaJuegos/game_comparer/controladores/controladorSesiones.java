@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import com.ComparaJuegos.game_comparer.UsuarioRepositorio;
 import com.ComparaJuegos.game_comparer.models.Usuario;
+import com.ComparaJuegos.game_comparer.models.Wishlist;
 
 
 
@@ -54,6 +55,23 @@ public class controladorSesiones {
         return "redirect:/inicioSesion";
     }
     
-    
+    //metodo para la creacion de wishlist (aun le falta plantilla y pagina)
+
+    @PostMapping("/crear-wishlist")
+    public String crearPropiaWishlist(@ModelAttribute Usuario usuarioActual) {
+        Usuario usuarioDB = usuarioRepositorio.findById(usuarioActual.getId()).orElse(null);
+        
+        //creacion de wishlist (basico aun)
+        if (usuarioDB != null) {
+            
+            Wishlist nueva = new Wishlist();
+            nueva.setUsuario(usuarioDB);
+            usuarioDB.getWishlists().add(nueva);
+            
+            usuarioRepositorio.save(usuarioDB);
+        }
+        
+        return "redirect:/perfil";
+    }
  
 }

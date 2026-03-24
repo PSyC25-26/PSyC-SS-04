@@ -2,10 +2,12 @@ package com.ComparaJuegos.game_comparer.models;
 
 import java.time.LocalDate;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -21,5 +23,9 @@ public class Usuario {
 
     private LocalDate fecha_nac;
     private String name, email, contrasena, pais;
+
+    // un usuario varias wishlist
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    private java.util.List<Wishlist> wishlists = new java.util.ArrayList<>();
 
 }
