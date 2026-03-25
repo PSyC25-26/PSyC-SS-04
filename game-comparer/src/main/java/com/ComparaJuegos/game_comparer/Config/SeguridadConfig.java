@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -15,7 +15,7 @@ public class SeguridadConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/registro", "/inicioSesion","/iniciar","/css/**","/estilos.css").permitAll()// Sin sesion puede acceder a registro y login
+                        .requestMatchers("/", "/registro", "/inicioSesion", "/iniciar", "/css/**", "/estilos.css").permitAll()// Sin sesion puede acceder a registro y login
                         .anyRequest().authenticated()//Sin sesion al resto de paginas no puede acceder
                 )
                 .formLogin(form -> form
@@ -30,6 +30,6 @@ public class SeguridadConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance(); //Compara password sin encriptar
+        return new BCryptPasswordEncoder();
     }
 }

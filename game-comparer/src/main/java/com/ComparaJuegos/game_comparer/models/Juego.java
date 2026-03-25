@@ -1,33 +1,31 @@
 package com.ComparaJuegos.game_comparer.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
 @Table(name = "Juego")
 public class Juego {
 
-    @Id //Esto debe estar siempre, pues la BD necesita un ID para funcionar
-    @GeneratedValue(strategy = GenerationType.IDENTITY)//Ahora el ID se genera eutomaticamente
-    private long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private String name;
     private String publisher;
     private String developer;
-    private String distributionPlatform;
-    private double price;
-    private java.time.LocalDate releaseDate;
-    //additional content es un dato no especificable, al no ser necesaria se queda asi de momento
+    private String genero;
+    private String descripcion;
+    private String imagen;
+    private LocalDate releaseDate;
 
-    //varios juegos a varios wishlist y viceversa
+    @OneToMany(mappedBy = "juego", cascade = CascadeType.ALL)
+    private List<Precio> precios = new ArrayList<>();
+
     @ManyToMany(mappedBy = "juegos")
-    private java.util.List<Wishlist> listasDondeAparece;
-    
-    
+    private List<Wishlist> listasDondeAparece = new ArrayList<>();
 }
