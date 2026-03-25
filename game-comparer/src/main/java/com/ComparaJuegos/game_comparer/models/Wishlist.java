@@ -14,6 +14,8 @@ public class Wishlist {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String nombre;
+
     // varias Wishlist un Usuario
     @ManyToOne
     @JoinColumn(name = "usuario_id")
