@@ -10,7 +10,7 @@
     <header th:replace="plantilla :: headerPlant"></header>
 
     <div id="div_inicio_y_registro">
-        <h2><strong>Inicio de sesión</strong></h2>
+        <h2><strong>Registro de usuarios</strong></h2>
 
         <form th:action="@{/registro}" th:object="${usuario}" method="post">
 
@@ -39,7 +39,7 @@
         
         </br>
 
-            <input type="submit" value="Confirmar">
+            <input type="submit" value="Registrarse" style="margin: 15px;">
 
         </form>
     </div>
