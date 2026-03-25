@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" 
+      th:replace="~{plantilla :: bodyPlant}"> <head>
+    <title>Mi Perfil - Caza Ofertas</title>
+</head>
+
+<body>
+    <div th:fragment="cuerpoExtra">
+        <section class="perfil-container">
+            <h2>Panel de Usuario</h2>
+            <p>Hola, <span th:text="${usuario.name}">Usuario</span>!</p>
+
+            <hr>
+
+            <h3>Mis Listas de Deseos</h3>
+            
+            <div th:if="${#lists.isEmpty(usuario.wishlists)}">
+                <p>Aún no tienes ninguna lista. ¡Crea la primera!</p>
+            </div>
+
+            <ul class="lista-wishlists">
+                <li th:each="lista : ${usuario.wishlists}">
+                    <strong th:text="${lista.nombre}">Nombre de la lista</strong>
+                    <span th:text="${#lists.size(lista.juegos)} + ' juegos'">0 juegos</span>
+                    <a th:href="@{/wishlist/{id}(id=${lista.id})}"> Ver detalles</a>
+                </li>
+            </ul>
+
+            <hr>
+
+            <form th:action="@{/crear-wishlist}" method="post">
+                <input type="hidden" name="id" th:value="${usuario.id}" />
+                <input type="text" name="nombre" placeholder="Nombre de la nueva lista (ej: Favoritos)" required />
+                <button type="submit">Crear Nueva Wishlist</button>
+            </form>
+        </section>
+    </div>
+</body>
+</html>

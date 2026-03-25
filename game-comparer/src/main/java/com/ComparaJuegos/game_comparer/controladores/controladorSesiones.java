@@ -5,10 +5,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ComparaJuegos.game_comparer.UsuarioRepositorio;
 import com.ComparaJuegos.game_comparer.models.Usuario;
 import com.ComparaJuegos.game_comparer.models.Wishlist;
+
+import jakarta.servlet.http.HttpSession;
 
 
 
@@ -58,7 +61,7 @@ public class controladorSesiones {
     //metodo para la creacion de wishlist (aun le falta plantilla y pagina)
 
     @PostMapping("/crear-wishlist")
-    public String crearPropiaWishlist(@ModelAttribute Usuario usuarioActual) {
+    public String crearPropiaWishlist(@ModelAttribute Usuario usuarioActual,@RequestParam("nombre") String nombreLista) {
         Usuario usuarioDB = usuarioRepositorio.findById(usuarioActual.getId()).orElse(null);
         
         //creacion de wishlist (basico aun)
@@ -66,6 +69,7 @@ public class controladorSesiones {
             
             Wishlist nueva = new Wishlist();
             nueva.setUsuario(usuarioDB);
+            nueva.setNombre(nombreLista);
             usuarioDB.getWishlists().add(nueva);
             
             usuarioRepositorio.save(usuarioDB);
@@ -73,5 +77,19 @@ public class controladorSesiones {
         
         return "redirect:/perfil";
     }
- 
+
+    //metodo para ver el perfil del usuario
+    @GetMapping("/perfil")
+    public String verPerfil(Model model, HttpSession session) {
+        Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioUsuario"); 
+
+        if (usuarioLogueado == null) {
+            return "redirect:/inicioSesion"; 
+        }
+        Usuario usuarioDB = usuarioRepositorio.findById(usuarioLogueado.getId()).orElse(null);
+        model.addAttribute("usuario", usuarioDB);
+        
+        return "perfil.html";
+    }
+    
 }
