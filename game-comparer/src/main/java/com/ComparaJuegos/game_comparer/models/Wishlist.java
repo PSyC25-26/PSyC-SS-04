@@ -2,8 +2,9 @@ package com.ComparaJuegos.game_comparer.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import java.util.List;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -15,13 +16,12 @@ public class Wishlist {
     private Long id;
 
     private String nombre;
+    private LocalDateTime fechaCreacion = LocalDateTime.now();
 
-    // varias Wishlist un Usuario
     @ManyToOne
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 
-    // varias wishlist varios juegos y viceversa
     @ManyToMany
     @JoinTable(
       name = "wishlist_juegos",
