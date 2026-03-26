@@ -18,10 +18,10 @@ public class UsuarioService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Usuario usuario = repositorio.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado con email: " + email));
-        return User.builder() //Creamos un usuario donde Spring Security pueda entender a partir del user sacado de user repository
+        return User.builder()
                 .username(usuario.getEmail())
                 .password(usuario.getContrasena())
-                .roles("USER")
+                .roles(usuario.getRol() != null ? usuario.getRol().name() : "USER")
                 .build();
     }
 }

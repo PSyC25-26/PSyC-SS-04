@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.ComparaJuegos.game_comparer.UsuarioRepositorio;
 import com.ComparaJuegos.game_comparer.models.Usuario;
 import com.ComparaJuegos.game_comparer.models.Wishlist;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -19,8 +20,7 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 public class controladorSesiones {
 
-    @GetMapping("/iniciar")
-
+    @GetMapping({"/", "/iniciar"})
     public String inicio(){
         return "principal";
     }
@@ -43,17 +43,17 @@ public class controladorSesiones {
         return "prueba_login";
     }
 
-    //Necesario para que funcione lo siguiente, sino se queja
     private final UsuarioRepositorio usuarioRepositorio;
+    private final PasswordEncoder passwordEncoder;
 
-    controladorSesiones(UsuarioRepositorio usuarioRepositorio) {
+    controladorSesiones(UsuarioRepositorio usuarioRepositorio, PasswordEncoder passwordEncoder) {
         this.usuarioRepositorio = usuarioRepositorio;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    //Esto recibe lo del formulario y lo guarda
     @PostMapping("/registro")
     public String registrarUsuario(@ModelAttribute Usuario usuario) {
-        //TODO: process POST request
+        usuario.setContrasena(passwordEncoder.encode(usuario.getContrasena()));
         usuarioRepositorio.save(usuario);
         return "redirect:/inicioSesion";
     }

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/estilos.css}">
+    <title>Wishlist - Caza Ofertas</title>
+</head>
+<body>
+
+    <header th:insert="~{plantilla :: headerPlant}"></header>
+
+    <main>
+        <h2 th:text="${wishlist.nombre}">Mi Wishlist</h2>
+        <a href="/buscar">Buscar más juegos</a> |
+        <a href="/perfil">Volver al perfil</a>
+
+        <div th:if="${#lists.isEmpty(wishlist.juegos)}">
+            <p>Esta wishlist está vacía. ¡Busca juegos y añádelos!</p>
+        </div>
+
+        <div th:each="juego : ${wishlist.juegos}" style="border:1px solid #ccc; margin:10px; padding:10px;">
+
+            <img th:if="${juego.imagen != null}" th:src="${juego.imagen}" alt="Portada" style="width:100px;" />
+
+            <h3 th:text="${juego.name}">Nombre</h3>
+            <p th:if="${juego.genero != null}" th:text="${juego.genero}"></p>
+            <p th:if="${juego.descripcion != null}" th:text="${juego.descripcion}"></p>
+
+            <div th:each="precio : ${juego.precios}">
+                <a th:if="${precio.url != null}" th:href="${precio.url}" target="_blank">
+                    <span th:text="${precio.tienda}"></span>: <span th:text="${precio.precio} + ' €'"></span>
+                </a>
+                <span th:if="${precio.url == null}">
+                    <span th:text="${precio.tienda}"></span>: <span th:text="${precio.precio} + ' €'"></span>
+                </span>
+            </div>
+
+        </div>
+    </main>
+
+    <footer th:insert="~{plantilla :: footerPlant}"></footer>
+
+</body>
+</html>
