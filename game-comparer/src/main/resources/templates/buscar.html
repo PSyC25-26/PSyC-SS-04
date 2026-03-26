@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/estilos.css}">
+    <title>Buscar Juegos - Caza Ofertas</title>
+</head>
+<body>
+
+    <header th:insert="~{plantilla :: headerPlant}"></header>
+
+    <main>
+        <h2>Buscar Juegos</h2>
+
+        <form method="get" action="/buscar">
+            <input type="text" name="q" th:value="${q}" placeholder="Busca un juego..." required />
+            <button type="submit">Buscar</button>
+        </form>
+
+        <div th:if="${resultados != null and !#lists.isEmpty(resultados)}">
+            <div th:each="r : ${resultados}" style="border:1px solid #ccc; margin:10px; padding:10px;">
+
+                <img th:if="${r.imagen != null}" th:src="${r.imagen}" alt="Portada" style="width:100px;" />
+
+                <h3 th:text="${r.name}">Nombre</h3>
+                <p th:if="${r.genero != null}" th:text="${r.genero}"></p>
+                <p th:if="${r.releaseDate != null}" th:text="${r.releaseDate}"></p>
+                <p th:if="${r.descripcion != null}" th:text="${r.descripcion}"></p>
+
+                <div>
+                    <a th:if="${r.steamPrice != null}" th:href="${r.steamUrl}" target="_blank">
+                        Steam: <span th:text="${r.steamPrice} + ' €'"></span>
+                    </a>
+                    <span th:if="${r.steamPrice == null}">No disponible en Steam</span>
+                    &nbsp;
+                    <a th:if="${r.epicPrice != null}" th:href="${r.epicUrl}" target="_blank">
+                        Epic: <span th:text="${r.epicPrice} + ' €'"></span>
+                    </a>
+                    <span th:if="${r.epicPrice == null}">No disponible en Epic</span>
+                </div>
+
+                <form th:if="${!#lists.isEmpty(wishlists)}" method="post" action="/wishlist/agregar">
+                    <input type="hidden" name="name"        th:value="${r.name}" />
+                    <input type="hidden" name="descripcion" th:value="${r.descripcion}" />
+                    <input type="hidden" name="imagen"      th:value="${r.imagen}" />
+                    <input type="hidden" name="genero"      th:value="${r.genero}" />
+                    <input type="hidden" name="releaseDate" th:value="${r.releaseDate}" />
+                    <input type="hidden" name="developer"   th:value="${r.developer}" />
+                    <input type="hidden" name="publisher"   th:value="${r.publisher}" />
+                    <input type="hidden" name="steamPrice"  th:value="${r.steamPrice}" />
+                    <input type="hidden" name="steamUrl"    th:value="${r.steamUrl}" />
+                    <input type="hidden" name="epicPrice"   th:value="${r.epicPrice}" />
+                    <input type="hidden" name="epicUrl"     th:value="${r.epicUrl}" />
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <select name="wishlistId">
+                        <option th:each="wl : ${wishlists}" th:value="${wl.id}" th:text="${wl.nombre}">Lista</option>
+                    </select>
+                    <button type="submit">Añadir a Wishlist</button>
+                </form>
+                <p th:if="${#lists.isEmpty(wishlists)}">
+                    <a href="/perfil">Crea una wishlist primero</a>
+                </p>
+
+            </div>
+        </div>
+
+        <p th:if="${q != null and !q.isBlank() and #lists.isEmpty(resultados)}">
+            No se encontraron resultados para "<span th:text="${q}"></span>".
+        </p>
+    </main>
+
+    <footer th:insert="~{plantilla :: footerPlant}"></footer>
+
+</body>
+</html>

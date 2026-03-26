@@ -20,7 +20,7 @@ public class SeguridadConfig {
                 )
                 .formLogin(form -> form
                         .loginPage("/inicioSesion") //Escucha en el iniciosesion mediante el form implementado ahi
-                        .defaultSuccessUrl("/prueba_login", true) // A donde vas al iniciar sesion
+                        .defaultSuccessUrl("/buscar", true) // A donde vas al iniciar sesion
                         .permitAll()
                 )
                 .logout(logout -> logout.permitAll());
