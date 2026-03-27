@@ -9,11 +9,10 @@
 <body>
 
     <header th:insert="~{plantilla :: headerPlant}"></header>
+    <nav th:insert="~{plantilla :: navPlant}"></nav>
 
     <main>
         <h2 th:text="${wishlist.nombre}">Mi Wishlist</h2>
-        <a href="/buscar">Buscar más juegos</a> |
-        <a href="/perfil">Volver al perfil</a>
 
         <div th:if="${#lists.isEmpty(wishlist.juegos)}">
             <p>Esta wishlist está vacía. ¡Busca juegos y añádelos!</p>
