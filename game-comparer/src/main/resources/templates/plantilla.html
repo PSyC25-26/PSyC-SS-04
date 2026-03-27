@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" xmlns="http://w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,7 +14,19 @@
         <h1 style="">CAZA OFERTAS GAMING</h1>
 
     </header>
-    
+
+    <nav th:fragment="navPlant">
+        <a th:href="@{/buscar}">Inicio</a>
+        <a th:href="@{/buscar}">Buscar juegos</a>
+        <a th:href="@{/perfil}">Mi perfil</a>
+        <form method="post" th:action="@{/logout}" style="display:inline;">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <button type="submit">Cerrar sesión</button>
+        </form>
+    </nav>
+
+    <nav th:insert="~{plantilla :: navPlant}"></nav>
+
     <div th:fragment="cuerpoExtra">
 
     </div>
