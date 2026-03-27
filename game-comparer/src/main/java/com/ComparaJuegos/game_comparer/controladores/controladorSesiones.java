@@ -89,7 +89,7 @@ public class controladorSesiones {
         Usuario usuarioDB = usuarioRepositorio.findById(usuarioLogueado.getId()).orElse(null);
         model.addAttribute("usuario", usuarioDB);
         
-        return "perfil.html";
+        return "perfil";
     }
     
 }
