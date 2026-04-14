@@ -1,5 +1,10 @@
+body{
+    background-color: #2b2d42; /*Color principal*/
+    
+}
+
 #principal{
-    background-color: lightgray;
+    background-color: #8d99ae; /*Color secundario*/
 
     border-radius: 20px;
     margin: 5px;
@@ -20,14 +25,20 @@
 
 h1{
     font-size: 40px;
+
+    
 }
 
 header{
+    margin-top: 0;
+
     text-align: center;
+
+    background-color: #ef233c; /*4to*/
 }
 
 footer{
-    background-color: burlywood;
+    background-color: #8d99ae; /*Secundario*/
 
     border-width: 2px;
     border-style: dotted;
@@ -45,9 +56,9 @@ footer{
     padding: 70px;
     padding: 50px 5px;
 
-    background-color: rgba(70, 186, 70, 0.992);
+    background-color: #edf2f4; /*Colores terciarios*/
 
-    border-color: rgb(0, 116, 0);
+    border-color: #edf2f4;
     border-radius: 23px;
     border-width: 1,5px;
     border-style: solid;
@@ -59,20 +70,15 @@ footer{
 
 }
 
-body{
-    background-color: bisque;
-    
-}
-
 #div_inicio_y_registro{
     text-align: center;
 
     border-style: solid;
-    border-color: darkslategray;
+    border-color: #8d99ae; /*Secundario*/
     border-width: 2,5px;
     border-radius: 20px;
 
-    background-color: green;
+    background-color: #8d99ae; /*Secundario*/
 
     margin-left: 10%;
     margin-right: 10%;
@@ -84,4 +90,5 @@ body{
     font-size: 20px;
 
 }
+
 
