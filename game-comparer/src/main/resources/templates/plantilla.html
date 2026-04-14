@@ -15,14 +15,27 @@
 
     </header>
 
-    <nav th:fragment="navPlant">
-        <a th:href="@{/buscar}">Inicio</a>
-        <a th:href="@{/buscar}">Buscar juegos</a>
-        <a th:href="@{/perfil}">Mi perfil</a>
-        <form method="post" th:action="@{/logout}" style="display:inline;">
+    <nav th:fragment="navPlant" id="principal">
+        <span id="botones_inicio">
+            <a th:href="@{/iniciar}" class="boton_iniciar">Inicio</a>
+            </a>
+        </br>
+            <a th:href="@{/buscar}" class="boton_iniciar">Buscador de juegos</a>
+            </a>
+        </br>
+            <a th:href="@{/perfil}" class="boton_iniciar">Mi perfil</a>
+            </a>
+        </br>
+            <a th:href="@{/wishlist/1}" class="boton_iniciar">Lista de deseados</a>
+            </a>
+        </br>
+            <form method="post" th:action="@{/logout}" style="display:inline; padding: 5px;">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
             <button type="submit">Cerrar sesión</button>
-        </form>
+        </form> 
+        </span>
+        
+        
     </nav>
 
     <nav th:insert="~{plantilla :: navPlant}"></nav>

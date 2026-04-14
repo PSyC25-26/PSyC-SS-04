@@ -6,7 +6,7 @@ body{
 #principal{
     background-color: #8d99ae; /*Color secundario*/
 
-    border-radius: 20px;
+    border-radius: 50px;
     margin: 5px;
 
     padding: 5%;
@@ -53,8 +53,14 @@ footer{
     font-size: 17px;
     text-decoration: none;
 
-    padding: 70px;
-    padding: 50px 5px;
+    padding-left: 20px;
+    padding-right: 20px;
+
+    padding-bottom: 5px;
+    padding-top: 5px;
+
+    margin-left: 5px;
+    margin-right: 5px;
 
     background-color: #edf2f4; /*Colores terciarios*/
 
@@ -91,4 +97,7 @@ footer{
 
 }
 
+#principal_iniciado{
+    background-color: #ef233c;
+}
 
