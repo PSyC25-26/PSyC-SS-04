@@ -12,6 +12,16 @@
     <nav th:insert="~{plantilla :: navPlant}"></nav>
 
     <main>
+        <h2>Accede a tus listas de deseados:</h2>
+
+        <ul>
+            <li th:each="w : ${wishlists}" >
+                <a th:href = "@{/wishlist/{id}(id=${w.id})}"
+                    th:text = "'Acceso a la wishlist número:'  + ${w.id}">
+                </a>
+            </li>
+        </ul>
+
         <h2>Buscador de juegos</h2>
 
         <form method="get" action="/buscar">
