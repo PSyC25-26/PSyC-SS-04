@@ -1,9 +1,11 @@
 package com.ComparaJuegos.game_comparer;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import static org.mockito.ArgumentMatchers.any;
@@ -11,7 +13,6 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.eq;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -87,9 +88,8 @@ import com.ComparaJuegos.game_comparer.service.BusquedaService;
 
 		@Test //Ahora cuando lo que se busca ES null
 		void busquedaNull(){
+			//Si te tiene que pasar algo
 			when(detallesUsuario.getUsername()).thenReturn("usuarioTest@gmail.com");
-
-			String q = null;
 
 			Usuario usuario = new Usuario();
 
@@ -97,13 +97,28 @@ import com.ComparaJuegos.game_comparer.service.BusquedaService;
 
 			when(wishlistRepositorio.findByUsuario(usuario)).thenReturn(List.of());
 
-			String vista = controlador.buscar(q, detallesUsuario, modelo);
+			String vista = controlador.buscar(null, detallesUsuario, modelo);
 
 			verify(busquedaService, never()).buscar(any());
-			verify(modelo).addAttribute("q", q);
+			verify(modelo).addAttribute("q", null);
 			verify(modelo).addAttribute(eq("resultados"), anyList());
 			verify(modelo).addAttribute(eq("wishlists"), anyList());
 
 			assertEquals("buscar", vista);
+		}
+
+		@Test //No existe el juego
+		void BusquedaDeJuegoNoExistente(){
+			String q = "heldorse";//Juego que buscamos y que se que o existe
+
+			when(detallesUsuario.getUsername()).thenReturn("userTestNull@gmail.com");
+
+			Usuario usuario = new Usuario();
+
+			when(usuarioRepositorio.findByEmail("userTestNull@gmail.com")).thenReturn(Optional.empty());
+			
+			assertThrows(NoSuchElementException.class, () -> {
+				controlador.buscar(q, detallesUsuario, modelo);
+			});
 		}
 	}
