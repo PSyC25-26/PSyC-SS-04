@@ -23,6 +23,7 @@ import org.springframework.ui.Model;
 import com.ComparaJuegos.game_comparer.controladores.BusquedaControlador;
 import com.ComparaJuegos.game_comparer.dto.ResultadoBusquedaDTO;
 import com.ComparaJuegos.game_comparer.models.Usuario;
+import com.ComparaJuegos.game_comparer.models.Wishlist;
 import com.ComparaJuegos.game_comparer.service.BusquedaService;
 
 
@@ -51,7 +52,7 @@ import com.ComparaJuegos.game_comparer.service.BusquedaService;
 		void testAgreagarAWishlist(){
 
 			ResultadoBusquedaDTO dto_resul = new ResultadoBusquedaDTO();
-			long id_wishlist = 1L;
+			long id_wishlist = 1L;//Para que conozca al 1 como Long, le ponemos una L despues
 
 			when(busquedaService.agregarAWishlist(dto_resul, id_wishlist)).thenReturn(99L);
 
@@ -120,5 +121,58 @@ import com.ComparaJuegos.game_comparer.service.BusquedaService;
 			assertThrows(NoSuchElementException.class, () -> {
 				controlador.buscar(q, detallesUsuario, modelo);
 			});
-		}
+		};
+
+		@Test//Test de, la wishlist existe
+		void EntrarWishlist(){
+
+			Usuario usuario = new Usuario();
+			usuario.setId(1L);
+
+			Wishlist listaDeseos = new Wishlist();
+			listaDeseos.setId(10L);
+			//Hay que crear 2 usuarios separados para que funcione bien
+			Usuario usuarioDos = new Usuario();
+			usuarioDos.setId(1L);
+
+			listaDeseos.setUsuario(usuarioDos);
+
+			when(detallesUsuario.getUsername()).thenReturn("UsuarioWishlist@gmail.com");
+
+			when(usuarioRepositorio.findByEmail("UsuarioWishlist@gmail.com")).thenReturn(Optional.of(usuario));
+			when(wishlistRepositorio.findById(10L)).thenReturn(Optional.of(listaDeseos));
+
+			String vista = controlador.verWishlist(10L, detallesUsuario, modelo);
+
+			assertEquals("detalle-wishlist", vista);
+			verify(modelo).addAttribute("wishlist", listaDeseos);
+
+		};
+
+		//Si no existe error
+		@Test//Acceso denegado
+		void ImposibleEntrarWishlist(){
+
+			Usuario usuario = new Usuario();
+			usuario.setId(1L);
+
+			Usuario usuarioDueño = new Usuario();
+			usuarioDueño.setId(6L);
+
+			Wishlist listaDeseos = new Wishlist();
+			listaDeseos.setId(10L);
+
+			listaDeseos.setUsuario(usuarioDueño);
+
+			when(detallesUsuario.getUsername()).thenReturn("UsuarioWishlist@gmail.com");
+
+			when(usuarioRepositorio.findByEmail(any())).thenReturn(Optional.of(usuario));
+			when(wishlistRepositorio.findById(10L)).thenReturn(Optional.of(listaDeseos));
+
+			String vista = controlador.verWishlist(10L, detallesUsuario, modelo);
+
+			assertEquals("redirect:/buscar", vista);
+			verify(modelo, never()).addAttribute(eq("wishlist"), any());//Si devuelve algo es que tienes acceso
+
+		};
 	}
