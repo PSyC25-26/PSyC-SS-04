@@ -1,5 +1,6 @@
 package com.ComparaJuegos.game_comparer.controladores;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.ComparaJuegos.game_comparer.UsuarioRepositorio;
 import com.ComparaJuegos.game_comparer.models.Usuario;
 import com.ComparaJuegos.game_comparer.models.Wishlist;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -19,6 +19,15 @@ import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class controladorSesiones {
+
+
+    private final UsuarioRepositorio usuarioRepositorio;
+    private final PasswordEncoder passwordEncoder;
+
+    controladorSesiones(UsuarioRepositorio usuarioRepositorio, PasswordEncoder passwordEncoder) {
+        this.usuarioRepositorio = usuarioRepositorio;
+        this.passwordEncoder = passwordEncoder; 
+    }
 
     @GetMapping({"/", "/iniciar"})
     public String inicio(){
@@ -41,14 +50,6 @@ public class controladorSesiones {
     public String paginaDePrueba() {
         // Este String "home" debe ser el nombre exacto de tu archivo home.html
         return "prueba_login";
-    }
-
-    private final UsuarioRepositorio usuarioRepositorio;
-    private final PasswordEncoder passwordEncoder;
-
-    controladorSesiones(UsuarioRepositorio usuarioRepositorio, PasswordEncoder passwordEncoder) {
-        this.usuarioRepositorio = usuarioRepositorio;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @PostMapping("/registro")
