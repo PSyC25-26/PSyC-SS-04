@@ -16,9 +16,14 @@
 
         <ul>
             <li th:each="w : ${wishlists}" >
-                <a th:href = "@{/wishlist/{id}(id=${w.id})}"
-                    th:text = "'Acceso a la wishlist número:'  + ${w.id}">
-                </a>
+                <div class="boton_iniciar">
+                    <span>
+                        <a th:href = "@{/wishlist/{id}(id=${w.id})}"
+                        th:text = "'Wishlist número:'  + ${w.id}">
+                        </a>
+                    </span>
+                </div>
+                
             </li>
         </ul>
 

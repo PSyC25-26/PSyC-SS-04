@@ -49,9 +49,13 @@ footer{
     margin: 10%;
 }
 
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
 .boton_iniciar{
     font-size: 17px;
-    text-decoration: none;
 
     padding-left: 20px;
     padding-right: 20px;
