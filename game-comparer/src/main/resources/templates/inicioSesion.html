@@ -25,17 +25,22 @@
 
         </form>
     </div>
+    
+    <br>
 
-    <div id="botnes_mov">
-        <span>
-            <a th:href="@{/iniciar}">
-                <p>Vuelta al inicio</p>
-            </a>
-
-            <a th:href="@{/registro}">
-                <p>¿No tienes una cuenta? REGISTRATE</p>
-            </a>
-        </span>
+    <div>
+        <div id="botones_inicio">
+            <span class="boton_iniciar">
+                <a th:href="@{/iniciar}">
+                    <p>Vuelta al inicio</p>
+                </a>
+            </span>
+            <span class="boton_iniciar">
+                <a th:href="@{/registro}">
+                    <p>REGISTRATE</p>
+                </a>
+            </span>
+        </div>
     </div>
 
     <footer th:replace="plantilla :: footerPlant"></footer>
