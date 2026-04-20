@@ -27,7 +27,7 @@ public class BusquedaService {
     private final WishlistRepositorio wishlistRepositorio;
 
     public BusquedaService(IgdbService igdbService, CheapSharkService cheapSharkService,
-                           JuegoRepositorio juegoRepositorio, WishlistRepositorio wishlistRepositorio) {
+            JuegoRepositorio juegoRepositorio, WishlistRepositorio wishlistRepositorio) {
         this.igdbService = igdbService;
         this.cheapSharkService = cheapSharkService;
         this.juegoRepositorio = juegoRepositorio;
@@ -72,24 +72,8 @@ public class BusquedaService {
             juego.setDeveloper(dto.getDeveloper());
             juego.setPublisher(dto.getPublisher());
 
-            if (dto.getSteamPrice() != null) {
-                Precio steam = new Precio();
-                steam.setTienda(Tienda.STEAM);
-                steam.setPrecio(dto.getSteamPrice());
-                steam.setUrl(dto.getSteamUrl());
-                steam.setFechaActualizacion(LocalDateTime.now());
-                steam.setJuego(juego);
-                juego.getPrecios().add(steam);
-            }
-            if (dto.getEpicPrice() != null) {
-                Precio epic = new Precio();
-                epic.setTienda(Tienda.EPIC);
-                epic.setPrecio(dto.getEpicPrice());
-                epic.setUrl(dto.getEpicUrl());
-                epic.setFechaActualizacion(LocalDateTime.now());
-                epic.setJuego(juego);
-                juego.getPrecios().add(epic);
-            }
+            addPrecio(juego, Tienda.STEAM, dto.getSteamPrice(), dto.getSteamUrl());
+            addPrecio(juego, Tienda.EPIC, dto.getEpicPrice(), dto.getEpicUrl());
             juego = juegoRepositorio.save(juego);
         } else {
             juego = existente.get();
@@ -107,8 +91,23 @@ public class BusquedaService {
         return wishlistId;
     }
 
+    private void addPrecio(Juego juego, Tienda tienda, Double precioValor, String url) {
+        if (precioValor == null) {
+            return;
+        }
+
+        Precio precio = new Precio();
+        precio.setTienda(tienda);
+        precio.setPrecio(precioValor);
+        precio.setUrl(url);
+        precio.setFechaActualizacion(LocalDateTime.now());
+        precio.setJuego(juego);
+        juego.getPrecios().add(precio);
+    }
+
     private void updateOrCreatePrecio(Juego juego, Tienda tienda, Double newPrice, String newUrl) {
-        if (newPrice == null) return;
+        if (newPrice == null)
+            return;
 
         Optional<Precio> existing = juego.getPrecios().stream()
                 .filter(p -> p.getTienda() == tienda)

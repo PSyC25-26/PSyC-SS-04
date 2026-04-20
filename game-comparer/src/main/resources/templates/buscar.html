@@ -19,7 +19,7 @@
                 <div class="boton_iniciar">
                     <span>
                         <a th:href = "@{/wishlist/{id}(id=${w.id})}"
-                        th:text = "'Wishlist número:'  + ${w.id}">
+                        th:text = "'Wishlist número:'  + ${w.id} + ' - ' + 'Nombre: ' + ${w.nombre}" >
                         </a>
                     </span>
                 </div>
