@@ -105,9 +105,6 @@ class controladorSesionesTest {
         Usuario usuarioAct = new Usuario();
         usuarioAct.setId(1L);
 
-        Usuario usuarioBD = new Usuario();
-        usuarioBD.setId(2L);
-
         when(usuarioRepositorio.findById(1L)).thenReturn(Optional.empty());
 
         String resultado = controlador.crearPropiaWishlist(usuarioAct, "MisDeseadosImp");
@@ -116,4 +113,5 @@ class controladorSesionesTest {
 
         verify(usuarioRepositorio, never()).save(any());
     }
+
 }
