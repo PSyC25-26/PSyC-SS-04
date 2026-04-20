@@ -30,8 +30,11 @@ public class Juego {
     private String developer;
     private String genero;
 
+    @Column(name = "price")
+    private Double price = 0.0;
+
     @Lob
-    @Column(columnDefinition="TEXT")
+    @Column(columnDefinition = "TEXT")
     private String descripcion;
 
     private String imagen;
