@@ -8,6 +8,9 @@
 </head>
 
 <body>
+    <header th:insert="~{plantilla :: headerPlant}"></header>
+    <nav th:insert="~{plantilla :: navPlant}"></nav>
+
     <div th:fragment="cuerpoExtra">
         <section class="perfil-container">
             <h2>Panel de Usuario</h2>
@@ -15,19 +18,23 @@
 
             <hr>
 
-            <h3>Mis Listas de Deseos</h3>
+            <div style="background-color: #8d99ae;">
+                <h3>Mis Listas de Deseos</h3>
             
-            <div th:if="${#lists.isEmpty(usuario.wishlists)}">
-                <p>Aún no tienes ninguna lista. ¡Crea la primera!</p>
-            </div>
+            
+                <div th:if="${#lists.isEmpty(usuario.wishlists)}">
+                    <p>Aún no tienes ninguna lista. ¡Crea la primera!</p>
+                </div>
 
-            <ul class="lista-wishlists">
-                <li th:each="lista : ${usuario.wishlists}">
-                    <strong th:text="${lista.nombre}">Nombre de la lista</strong>
-                    <span th:text="${#lists.size(lista.juegos)} + ' juegos'"> juegos</span>
-                    <a th:href="@{/wishlist/{id}(id=${lista.id})}"> Ver detalles</a>
-                </li>
-            </ul>
+            
+                <ul class="lista-wishlists">
+                    <li th:each="lista : ${usuario.wishlists}">
+                        <strong th:text="${lista.nombre}">Nombre de la lista</strong>
+                        <span th:text="${#lists.size(lista.juegos)} + ' juegos'"> juegos</span>
+                        <a th:href="@{/wishlist/{id}(id=${lista.id})}"> Ver detalles</a>
+                    </li>
+                </ul>
+            </div>
 
             <hr>
 
@@ -38,5 +45,7 @@
             </form>
         </section>
     </div>
+
+    <footer th:insert="~{plantilla :: footerPlant}"></footer>
 </body>
 </html>
