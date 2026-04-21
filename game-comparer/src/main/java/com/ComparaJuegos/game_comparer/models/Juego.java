@@ -40,6 +40,7 @@ public class Juego {
     private String imagen;
     private LocalDate releaseDate;
 
+
     @OneToMany(mappedBy = "juego", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Precio> precios = new ArrayList<>();
 
