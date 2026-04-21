@@ -5,6 +5,8 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -12,6 +14,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.ui.Model;
 
@@ -112,6 +115,40 @@ class controladorSesionesTest {
         assertEquals("redirect:/perfil", resultado);
 
         verify(usuarioRepositorio, never()).save(any());
+    }
+
+    @Test
+    void testVerPerfil() {
+        Usuario usuario = new Usuario();
+        usuario.setId(1L);
+        usuario.setEmail("test@mail.com");
+
+        UserDetails userDetails = org.mockito.Mockito.mock(UserDetails.class);
+
+        when(userDetails.getUsername()).thenReturn("test@mail.com");
+        when(usuarioRepositorio.findByEmail("test@mail.com"))
+                .thenReturn(Optional.of(usuario));
+
+        String vista = controlador.verPerfil(modelo, userDetails);
+
+        assertEquals("perfil", vista);
+
+        verify(modelo).addAttribute("usuario", usuario);
+        verify(usuarioRepositorio).findByEmail("test@mail.com");
+    }
+
+    @Test
+    void testVerPerfil_usuarioNoExiste() {
+        UserDetails userDetails = org.mockito.Mockito.mock(UserDetails.class);
+
+        when(userDetails.getUsername()).thenReturn("noexiste@mail.com");
+        when(usuarioRepositorio.findByEmail("noexiste@mail.com"))
+                .thenReturn(Optional.empty());
+
+        assertThrows(
+                java.util.NoSuchElementException.class,
+                () -> controlador.verPerfil(modelo, userDetails)
+        );
     }
 
 }
