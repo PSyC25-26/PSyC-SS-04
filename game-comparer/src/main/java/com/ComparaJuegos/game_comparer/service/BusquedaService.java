@@ -4,6 +4,7 @@ import com.ComparaJuegos.game_comparer.JuegoRepositorio;
 import com.ComparaJuegos.game_comparer.WishlistRepositorio;
 import com.ComparaJuegos.game_comparer.dto.CheapSharkPrecioDTO;
 import com.ComparaJuegos.game_comparer.dto.IgdbJuegoDTO;
+import com.ComparaJuegos.game_comparer.dto.OfertasHomeDTO;
 import com.ComparaJuegos.game_comparer.dto.ResultadoBusquedaDTO;
 import com.ComparaJuegos.game_comparer.models.HistorialPrecios;
 import com.ComparaJuegos.game_comparer.models.Juego;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -134,5 +136,33 @@ public class BusquedaService {
             precio.setJuego(juego);
             juego.getPrecios().add(precio);
         }
+    }
+    public List<OfertasHomeDTO> getOfertasHome() {
+
+        List<IgdbJuegoDTO> juegos = igdbService.buscar("popular");
+
+        List<OfertasHomeDTO> ofertas = new ArrayList<>();
+
+        for (IgdbJuegoDTO igdb : juegos) {
+
+            CheapSharkPrecioDTO price =
+                    cheapSharkService.buscarPrecios(igdb.getName());
+
+            OfertasHomeDTO dto = new OfertasHomeDTO();
+
+            dto.setName(igdb.getName());
+            dto.setImage(igdb.getCoverUrl());
+            dto.setPrice(price.getSteamPrice() != null
+                    ? price.getSteamPrice()
+                    : price.getEpicPrice());
+
+
+
+            ofertas.add(dto);
+        }
+
+        Collections.shuffle(ofertas);
+
+        return ofertas.stream().limit(10).toList();
     }
 }

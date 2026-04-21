@@ -1,9 +1,12 @@
 package com.ComparaJuegos.game_comparer.service;
 
 import com.ComparaJuegos.game_comparer.dto.CheapSharkPrecioDTO;
+import com.ComparaJuegos.game_comparer.dto.OfertasHomeDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -85,5 +88,7 @@ public class CheapSharkService {
         }
         return String.valueOf(games.get(0).get("gameID"));
     }
+
+
 
 }

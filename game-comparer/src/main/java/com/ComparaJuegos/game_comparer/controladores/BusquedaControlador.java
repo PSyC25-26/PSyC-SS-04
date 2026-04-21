@@ -2,6 +2,7 @@ package com.ComparaJuegos.game_comparer.controladores;
 
 import java.util.List;
 
+import com.ComparaJuegos.game_comparer.dto.OfertasHomeDTO;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -45,7 +46,7 @@ public class BusquedaControlador {
 
         Usuario usuario = usuarioRepositorio.findByEmail(userDetails.getUsername()).orElseThrow();
         List<Wishlist> wishlists = wishlistRepositorio.findByUsuario(usuario);
-
+        List<OfertasHomeDTO> ofertas = busquedaService.getOfertasHome();
         model.addAttribute("q", q);
         model.addAttribute("resultados", resultados);
         model.addAttribute("wishlists", wishlists);
