@@ -152,6 +152,9 @@ public class BusquedaService {
 
             dto.setName(igdb.getName());
             dto.setImage(igdb.getCoverUrl());
+            dto.setSteamUrl(price.getSteamUrl());
+            dto.setEpicUrl(price.getEpicUrl());
+
             Double finalPrice = null;
 
             if (price != null && price.getSteamPrice() != null) {
