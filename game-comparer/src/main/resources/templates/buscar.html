@@ -12,6 +12,30 @@
     <nav th:insert="~{plantilla :: navPlant}"></nav>
 
     <main>
+        <h2> Ofertas del día :v)</h2>
+
+        <div class="carousel-container">
+
+            <button class="arrow left" onclick="scrollLeft()">&#10094;</button>
+
+            <div class="carousel" id="carousel">
+
+                <div th:each="o : ${ofertas}" class="card">
+
+                    <img th:src="${o.image}" alt="Juego" />
+
+                    <h3 th:text="${o.name}"></h3>
+
+                    <p th:text="${o.price + ' €'}"></p>
+
+                </div>
+
+            </div>
+
+            <button class="arrow right" onclick="scrollRight()">&#10095;</button>
+
+        </div>
+
         <h2>Accede a tus listas de deseados:</h2>
 
         <ul>

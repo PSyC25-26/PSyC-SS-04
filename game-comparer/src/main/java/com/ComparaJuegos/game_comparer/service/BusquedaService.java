@@ -152,9 +152,19 @@ public class BusquedaService {
 
             dto.setName(igdb.getName());
             dto.setImage(igdb.getCoverUrl());
-            dto.setPrice(price.getSteamPrice() != null
-                    ? price.getSteamPrice()
-                    : price.getEpicPrice());
+            Double finalPrice = null;
+
+            if (price != null && price.getSteamPrice() != null) {
+                finalPrice = price.getSteamPrice();
+            } else if (price != null && price.getEpicPrice() != null) {
+                finalPrice = price.getEpicPrice();
+            }
+
+            if (finalPrice == null) {
+                continue; // no hay oferta válida
+            }
+
+            dto.setPrice(finalPrice);
 
 
 
