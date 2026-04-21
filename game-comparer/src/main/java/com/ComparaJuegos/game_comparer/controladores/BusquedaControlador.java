@@ -47,6 +47,7 @@ public class BusquedaControlador {
         Usuario usuario = usuarioRepositorio.findByEmail(userDetails.getUsername()).orElseThrow();
         List<Wishlist> wishlists = wishlistRepositorio.findByUsuario(usuario);
         List<OfertasHomeDTO> ofertas = busquedaService.getOfertasHome();
+        model.addAttribute("ofertas", ofertas);
         model.addAttribute("q", q);
         model.addAttribute("resultados", resultados);
         model.addAttribute("wishlists", wishlists);
