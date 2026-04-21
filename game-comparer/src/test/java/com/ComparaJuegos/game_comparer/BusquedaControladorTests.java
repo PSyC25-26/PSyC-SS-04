@@ -28,7 +28,7 @@ import com.ComparaJuegos.game_comparer.service.BusquedaService;
 
 
     @ExtendWith(MockitoExtension.class)
-	class TestBusquedaContr{
+	class BusquedaControladorTests {
 
 		@Mock
 		private BusquedaService busquedaService;
