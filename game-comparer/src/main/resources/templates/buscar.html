@@ -21,8 +21,9 @@
             <div class="carousel" id="carousel">
 
                 <div th:each="o : ${ofertas}" class="card">
-
-                    <img th:src="${o.image}" alt="Juego" />
+                    <a th:href="${o.steamUrl != null ? o.steamUrl : '#'}" target="_blank">
+                        <img th:src="${o.image}" alt="Juego" />
+                    </a>
 
                     <h3 th:text="${o.name}"></h3>
 

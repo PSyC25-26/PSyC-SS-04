@@ -7,4 +7,6 @@ public class OfertasHomeDTO {
     private String image;
     private double price;
     private String store;
+    private String steamUrl;
+    private String epicUrl;
 }
