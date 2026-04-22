@@ -116,10 +116,9 @@ a {
 .carousel {
     display: flex;
     gap: 15px;
-    overflow-x: auto;
-    scroll-behavior: smooth;
-    padding: 10px;
-    width: 80%;
+    overflow: hidden;
+    width: 600px;
+    justify-content: center;
 }
 
 .carousel::-webkit-scrollbar {
@@ -127,8 +126,7 @@ a {
 }
 
 .card {
-    min-width: 180px;
-    flex: 0 0 auto;
+    flex: 0 0 calc((600px - 30px) / 3);
     background: #8d99ae;
     border-radius: 12px;
     padding: 10px;

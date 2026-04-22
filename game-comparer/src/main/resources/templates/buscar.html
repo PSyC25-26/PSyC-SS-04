@@ -36,6 +36,41 @@
             <button class="arrow right" onclick="scrollRight()">&#10095;</button>
 
         </div>
+        <script>
+            let index = 0;
+
+            function getStep() {
+                const card = document.querySelector(".card");
+                return card ? card.offsetWidth + 15 : 200;
+            }
+
+            function scrollRight() {
+                const carousel = document.getElementById("carousel");
+                const cards = document.querySelectorAll(".card");
+
+                const maxIndex = cards.length - 3;
+
+                if (index < maxIndex) {
+                    index++;
+                    carousel.scrollTo({
+                        left: index * getStep(),
+                        behavior: "smooth"
+                    });
+                }
+            }
+
+            function scrollLeft() {
+                const carousel = document.getElementById("carousel");
+
+                if (index > 0) {
+                    index--;
+                    carousel.scrollTo({
+                        left: index * getStep(),
+                        behavior: "smooth"
+                    });
+                }
+            }
+        </script>
 
         <h2>Accede a tus listas de deseados:</h2>
 
