@@ -139,7 +139,7 @@ public class BusquedaService {
     }
     public List<OfertasHomeDTO> getOfertasHome() {
 
-        List<IgdbJuegoDTO> juegos = igdbService.buscar("popular");
+        List<IgdbJuegoDTO> juegos = igdbService.buscar("ato");
 
         List<OfertasHomeDTO> ofertas = new ArrayList<>();
 
