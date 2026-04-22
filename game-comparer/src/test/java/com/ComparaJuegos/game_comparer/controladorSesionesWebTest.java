@@ -3,13 +3,9 @@ package com.ComparaJuegos.game_comparer;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.resttestclient.TestRestTemplate;
 import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTestClient;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.client.RestTestClient;
-import org.springframework.web.client.RestClient;
 import org.springframework.test.web.servlet.client.EntityExchangeResult;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -34,17 +30,15 @@ public class controladorSesionesWebTest {
                 .uri("/")
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(String.class) // Especificamos que queremos String
+                .expectBody(String.class)
                 .returnResult();
 
-        // Ahora podemos hacer las mismas verificaciones que antes
         assertEquals(200, result.getStatus().value());
 
         String body = result.getResponseBody();
         assertNotNull(body);
         assertTrue(body.contains("<html") || body.contains("<!DOCTYPE html"));
 
-        System.out.println("Prueba de integración exitosa");
     }
 
     @Test
