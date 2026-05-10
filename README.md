@@ -1,4 +1,4 @@
-![Java CI](https://github.com/PSyC25-26/PSyC-SS-04/blob/main/.github/workflows/ci-java.yml/badge.svg)
+![Java CI](https://github.com/PSyC25-26/PSyC-SS-04/actions/workflows/ci-java.yml/badge.svg)
 
 # Caza Ofertas Gaming
 
@@ -52,6 +52,21 @@ CREATE DATABASE mi_app_db;
 Las tablas se crean automáticamente al iniciar la aplicación (`ddl-auto=update`).
 
 ---
+
+## Ejecutar los tests
+
+El proyecto incluye una serie de pruebas para ganartizar un sistemas estable y sin errores.
+
+- **Test unitarios:** Se han implementado mediante **Mockito** para testear la lógica de los sistemas sin tener que utilizar las APIs y y funciones reales.
+
+Para ejecutar los tests desde la terminal:
+
+'''bash
+# Con el wrapper de Maven
+./mvnw test
+
+# Con Maven instalado de forma global
+mvn test
 
 ## Ejecución
 
