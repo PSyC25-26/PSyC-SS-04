@@ -1,47 +1,47 @@
 name: java CI game-comparer
 
 on:
-    push:
-        branches: 
-            -"main"
-            -"test-actions"
-    pull_request:
-        branches: 
-            -"main"
+  push:
+    branches: 
+      - "main"
+      - "test-actions"
+  pull_request:
+    branches: 
+      - "main"
 
 
 jobs:
-    build:
-        runs-on: ubuntu-latest
+  build:
+    runs-on: ubuntu-latest
 
-        services:
-            mysql:
-                image: mysql:8.0
-                env:
-                  MYSQL_ROOT_PASSWORD: gfe
-                  MYSQL_DATABASE: game-comparer
-                ports:
-                    - 3306:3306
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: gfe
+          MYSQL_DATABASE: mi_app_db
+        ports:
+          - 3306:3306
                 
-                #Verificación de que MYSQL funciona correctamente
-                options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+          #Verificación de que MYSQL funciona correctamente
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
-        steps:
-            - uses: actions/chackout@v4
+    steps:
+      - uses: actions/checkout@v4
 
-            - name: Set up JDK 17
-              uses: actions/setup-java@v4
-              with:
-                    java-version: '17'
-                    distribution: 'temurin'
-                    cache: maven
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
             
-            - name: BD
-              run: mvn -B package --file game-comparer/pom.xml
-              env:
-                SPRING_DATASOUCE_URL: jdbc:mysql://localhost:3306/mi_app_db
-                SPRING_DATASOURCE_USERNAME: gfe
-                SPRING_DATASOURCE_PASSWORD: gfe
-                SPRING_JPA_HIBERNATE_DDL_AUTO: update
-                IGDB_CLIENT_ID: ${{ secrets.IGDB_CLIENT_ID }}
-                IGDB_CLIENT_SECRET: ${{ secrets.IGDB_CLIENT_SECRET }}
+      - name: BD
+        run: mvn -B package --file game-comparer/pom.xml
+        env:
+          SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/mi_app_db
+          SPRING_DATASOURCE_USERNAME: root
+          SPRING_DATASOURCE_PASSWORD: gfe
+          SPRING_JPA_HIBERNATE_DDL_AUTO: update
+          IGDB_CLIENT_ID: ${{ secrets.IGDB_CLIENT_ID }}
+          IGDB_CLIENT_SECRET: ${{ secrets.IGDB_CLIENT_SECRET }}
