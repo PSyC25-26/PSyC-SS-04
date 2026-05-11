@@ -16,40 +16,64 @@ Comparador de precios de videojuegos con sistema de wishlists. Permite buscar ju
 - **Lombok** — reducción de boilerplate
 - **IGDB API** — metadatos de juegos (género, descripción, fecha de lanzamiento, portada)
 - **CheapShark API** — precios de tiendas (Steam, Epic Games Store)
+- **Docker** — contenerización de la aplicación y la base de datos
 
 ---
 
 ## Requisitos previos
 
-- Java 21 o superior
-- Maven (o usar el wrapper incluido `./mvnw`)
-- MySQL 8 corriendo en `localhost:3306`
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) instalado y en ejecución
 - Credenciales de la [IGDB API](https://api-docs.igdb.com/#getting-started) (Client ID y Client Secret de Twitch Developer)
 
 ---
 
 ## Configuración
+Crea un archivo de variables de entorno copiando la plantilla de ejemplo:
 
-Editar `game-comparer/src/main/resources/application.properties`:
-
-```properties
-# Base de datos
-spring.datasource.url=jdbc:mysql://localhost:3306/mi_app_db
-spring.datasource.username=root
-spring.datasource.password=TU_CONTRASEÑA
-
-# IGDB (Twitch Developer)
-igdb.client-id=TU_CLIENT_ID
-igdb.client-secret=TU_CLIENT_SECRET
+```bash
+cp .env.example .env
 ```
 
-Crear la base de datos en MySQL antes de arrancar:
+Edita el `.env` con tus datos:
 
-```sql
-CREATE DATABASE mi_app_db;
+```env
+DB_NAME=comparajuegos
+DB_ROOT_PASSWORD=tu_contraseña_root
+DB_USERNAME=tu_usuario
+DB_PASSWORD=tu_contraseña
+ 
+IGDB_CLIENT_ID=tu_client_id
+IGDB_CLIENT_SECRET=tu_client_secret
 ```
 
-Las tablas se crean automáticamente al iniciar la aplicación (`ddl-auto=update`).
+> El archivo `.env` está en `.gitignore` y nunca se sube al repositorio.
+
+---
+
+## Ejecutar el proyecto
+Docker levanta la aplicación y la base de datos MySQL juntas, sin necesidad de instalar Java, Maven ni MySQL.
+
+**1. Desde la carpeta `game-comparer/`, ejecuta:**
+
+```bash
+docker compose up --build
+```
+
+**2. Abre a la aplicación en:** [http://localhost:8080](http://localhost:8080)
+
+> La base de datos MySQL usa el puerto `localhost:3307` si quieres usar MySQL Workbench.
+
+### Detener los contenedores
+
+```bash
+docker compose down
+```
+
+Los datos de la base de datos se conservan entre reinicios gracias al volumen `mysql-data`. Para borrarlos usa:
+
+```bash
+docker compose down --volumes
+```
 
 ---
 
@@ -67,20 +91,6 @@ Para ejecutar los tests desde la terminal:
 
 # Con Maven instalado de forma global
 mvn test
-
-## Ejecución
-
-Desde la carpeta `game-comparer/`:
-
-```bash
-# Con el wrapper de Maven (recomendado, no necesita Maven instalado)
-./mvnw spring-boot:run
-
-# Con Maven instalado globalmente
-mvn spring-boot:run
-```
-
-La aplicación arranca en: **http://localhost:8080**
 
 ---
 
