@@ -63,6 +63,19 @@ class BusquedaControladorTests {
 		verify(busquedaService).agregarAWishlist(dto_resul, id_wishlist);
 	}
 
+	@Test
+	void testEliminarWishlist(){
+
+		long wishlistId = 1L;
+		long juegoId = 2L;
+
+		String resultado = controlador.eliminar(wishlistId, juegoId);
+
+		assertEquals("redirect:/wishlist/1", resultado);
+
+		verify(busquedaService).eliminarDeWishlist(wishlistId, juegoId);//Verifica que entra
+	}
+
 	@Test//Cuando acierta lo que se busca NO es null
 	void testBuscarJuegos(){
 		String id = "Battlefield";
