@@ -1,5 +1,14 @@
 package com.ComparaJuegos.game_comparer.service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.ComparaJuegos.game_comparer.JuegoRepositorio;
 import com.ComparaJuegos.game_comparer.WishlistRepositorio;
 import com.ComparaJuegos.game_comparer.dto.CheapSharkPrecioDTO;
@@ -11,14 +20,6 @@ import com.ComparaJuegos.game_comparer.models.Juego;
 import com.ComparaJuegos.game_comparer.models.Precio;
 import com.ComparaJuegos.game_comparer.models.Tienda;
 import com.ComparaJuegos.game_comparer.models.Wishlist;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class BusquedaService {
@@ -64,7 +65,7 @@ public class BusquedaService {
         Optional<Juego> existente = juegoRepositorio.findFirstByNameIgnoreCase(dto.getName());
 
         Juego juego;
-        if (existente.isEmpty()) {
+        if (existente.isEmpty()) {//Comprueba si existe en la BD, si no existe lo crea
             juego = new Juego();
             juego.setName(dto.getName());
             juego.setDescripcion(dto.getDescripcion());
@@ -77,20 +78,33 @@ public class BusquedaService {
             addPrecio(juego, Tienda.STEAM, dto.getSteamPrice(), dto.getSteamUrl());
             addPrecio(juego, Tienda.EPIC, dto.getEpicPrice(), dto.getEpicUrl());
             juego = juegoRepositorio.save(juego);
-        } else {
+        } else {//Si existe lo consigue
             juego = existente.get();
             updateOrCreatePrecio(juego, Tienda.STEAM, dto.getSteamPrice(), dto.getSteamUrl());
             updateOrCreatePrecio(juego, Tienda.EPIC, dto.getEpicPrice(), dto.getEpicUrl());
             juego = juegoRepositorio.save(juego);
         }
 
-        Wishlist wishlist = wishlistRepositorio.findById(wishlistId).orElseThrow();
+        Wishlist wishlist = wishlistRepositorio.findById(wishlistId).orElseThrow();//Consigue la wishlist deseada
         if (!wishlist.getJuegos().contains(juego)) {
-            wishlist.getJuegos().add(juego);
+            wishlist.getJuegos().add(juego);//Le metemos el juego en cuestion
             wishlistRepositorio.save(wishlist);
         }
 
         return wishlistId;
+    }
+
+    @Transactional
+    public void eliminarDeWishlist(Long wishlistId, Long juegoId){//Tengo que coger mi wishlist y el juego, de ahí comprobar si el juego existe, y despues eliminarlo
+        Wishlist wishlist = wishlistRepositorio.findById(wishlistId).orElseThrow();
+        Juego juegoElim = juegoRepositorio.findById(juegoId).orElseThrow(() -> new RuntimeException("Juego no encontrado, lo siento!"));
+
+        if (wishlist.getJuegos().contains(juegoElim)){
+            wishlist.getJuegos().remove(juegoElim);//Eliminamos el juego de la wishlist
+        };
+
+        wishlistRepositorio.save(wishlist);//Actualizamos y guardamos la wishlist
+
     }
 
     private void addPrecio(Juego juego, Tienda tienda, Double precioValor, String url) {

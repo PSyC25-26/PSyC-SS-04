@@ -2,7 +2,6 @@ package com.ComparaJuegos.game_comparer.controladores;
 
 import java.util.List;
 
-import com.ComparaJuegos.game_comparer.dto.OfertasHomeDTO;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -15,10 +14,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ComparaJuegos.game_comparer.UsuarioRepositorio;
 import com.ComparaJuegos.game_comparer.WishlistRepositorio;
+import com.ComparaJuegos.game_comparer.dto.OfertasHomeDTO;
 import com.ComparaJuegos.game_comparer.dto.ResultadoBusquedaDTO;
 import com.ComparaJuegos.game_comparer.models.Usuario;
 import com.ComparaJuegos.game_comparer.models.Wishlist;
 import com.ComparaJuegos.game_comparer.service.BusquedaService;
+
 
 @Controller
 public class BusquedaControlador {
@@ -63,6 +64,14 @@ public class BusquedaControlador {
         //Requiere el id despues de wishlist
         return "redirect:/wishlist/" + id;
     }
+
+    @PostMapping("/wishlist/eliminar")
+    public String eliminar(@RequestParam Long wishlistId, @RequestParam Long juegoId) {
+        busquedaService.eliminarDeWishlist(wishlistId, juegoId);
+        
+        return "redirect:/wishlist/" + wishlistId;
+    }
+    
 
     @GetMapping("/wishlist/{id}")
     public String verWishlist(@PathVariable Long id,
