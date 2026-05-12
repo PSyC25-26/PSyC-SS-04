@@ -35,6 +35,15 @@
                 </span>
             </div>
 
+            <form method="post" action="/wishlist/eliminar" style="margin-top: 10px;">
+                <input type="hidden" name="juegoId"        th:value="${juego.id}" />
+                <input type="hidden" name="wishlistId" th:value="${wishlist.id}" />
+
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+                <button type="submit">Eliminar</button>
+            </form>
+
         </div>
     </main>
 
