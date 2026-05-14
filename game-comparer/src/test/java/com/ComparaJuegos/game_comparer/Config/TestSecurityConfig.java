@@ -11,27 +11,27 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-@Profile("!test")
-public class SeguridadConfig {
+@Profile("test")
+public class TestSecurityConfig {
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/registro", "/inicioSesion", "/iniciar", "/css/**", "/estilos.css")
-                        .permitAll()// Sin sesion puede acceder a registro y login
-                        .anyRequest().authenticated()// Sin sesion al resto de paginas no puede acceder
-                )
+                        .permitAll()
+                        .anyRequest().authenticated())
                 .formLogin(form -> form
-                        .loginPage("/inicioSesion") // Escucha en el iniciosesion mediante el form implementado ahi
-                        .defaultSuccessUrl("/perfil", true) // A donde vas al iniciar sesion
+                        .loginPage("/inicioSesion")
+                        .defaultSuccessUrl("/perfil", true)
                         .permitAll())
-                .logout(logout -> logout.permitAll());
-
+                .logout(logout -> logout.permitAll())
+                .csrf(csrf -> csrf.disable());
         return http.build();
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder(); // o NoOpPasswordEncoder para tests más rápidos
     }
 }
