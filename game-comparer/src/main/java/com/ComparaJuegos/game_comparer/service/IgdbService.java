@@ -1,6 +1,7 @@
 package com.ComparaJuegos.game_comparer.service;
 
 import com.ComparaJuegos.game_comparer.dto.IgdbJuegoDTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
@@ -15,10 +16,18 @@ import java.util.stream.Collectors;
 public class IgdbService {
 
     private final IgdbTokenService tokenService;
-    private final RestClient restClient = RestClient.create();
+    private final RestClient restClient;
 
+    @Autowired
     public IgdbService(IgdbTokenService tokenService) {
         this.tokenService = tokenService;
+        this.restClient = RestClient.create();
+    }
+
+    /** Secondary constructor — allows injecting a RestClient in tests. */
+    public IgdbService(IgdbTokenService tokenService, RestClient restClient) {
+        this.tokenService = tokenService;
+        this.restClient = restClient;
     }
 
     @SuppressWarnings("unchecked")
@@ -36,6 +45,16 @@ public class IgdbService {
                 .retrieve()
                 .body(List.class);
 
+        return parseGameResponse(response);
+    }
+
+    /**
+     * Maps a raw IGDB API response (list of game maps) to IgdbJuegoDTO objects.
+     * Extracted to allow direct unit/perf testing of the parsing logic without
+     * needing to mock the HTTP layer.
+     */
+    @SuppressWarnings("unchecked")
+    public List<IgdbJuegoDTO> parseGameResponse(List<Map<String, Object>> response) {
         if (response == null) return List.of();
 
         List<IgdbJuegoDTO> results = new ArrayList<>();

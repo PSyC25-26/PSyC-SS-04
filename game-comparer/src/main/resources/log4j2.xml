@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss,SSS} (%t) %-5p [%c] - %m%n"/>
+        </Console>
+
+        <RollingFile name="File"
+                     fileName="logs/game-comparer.log"
+                     filePattern="logs/game-comparer-%d{yyyy-MM-dd}.log.gz">
+            <PatternLayout pattern="%d{HH:mm:ss,SSS} (%t) %-5p [%c] - %m%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <!-- Application package: DEBUG for detailed tracing during profiling -->
+        <Logger name="com.ComparaJuegos.game_comparer" level="DEBUG" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="File"/>
+        </Logger>
+
+        <!-- Spring and third-party libraries: INFO to reduce noise -->
+        <Root level="INFO">
+            <AppenderRef ref="Console"/>
+        </Root>
+    </Loggers>
+
+</Configuration>

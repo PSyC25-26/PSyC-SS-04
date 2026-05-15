@@ -13,7 +13,16 @@ import java.util.Map;
 @Service
 public class CheapSharkService {
 
-    private final RestClient restClient = RestClient.create();
+    private final RestClient restClient;
+
+    public CheapSharkService() {
+        this.restClient = RestClient.create();
+    }
+
+    /** Secondary constructor — allows injecting a RestClient in tests. */
+    public CheapSharkService(RestClient restClient) {
+        this.restClient = restClient;
+    }
 
     private static final String STEAM_STORE_ID = "1";
     private static final String EPIC_STORE_ID  = "25";
