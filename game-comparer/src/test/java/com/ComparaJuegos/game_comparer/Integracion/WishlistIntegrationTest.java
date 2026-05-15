@@ -84,6 +84,14 @@ public class WishlistIntegrationTest {
         userPassword = "TestPassword123!";
     }
 
+    @org.junit.jupiter.api.AfterEach
+    void cleanup() {
+        if (userId != null) {
+            usuarioRepositorio.deleteById(userId);
+            System.out.println("Usuario de test eliminado de la BD: " + userId);
+        }
+    }
+
     @Test
     void testWishlistUserStory() {
         registerUser();
