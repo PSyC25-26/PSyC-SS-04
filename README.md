@@ -79,18 +79,55 @@ docker compose down --volumes
 
 ## Ejecutar los tests
 
-El proyecto incluye una serie de pruebas para ganartizar un sistemas estable y sin errores.
+El proyecto tiene tres niveles de tests. Todos se ejecutan desde la carpeta `game-comparer/`.
 
-- **Test unitarios:** Se han implementado mediante **Mockito** para testear la lógica de los sistemas sin tener que utilizar las APIs y y funciones reales.
+### Tests unitarios y de controlador
 
-Para ejecutar los tests desde la terminal:
+No requieren base de datos ni Docker.
 
-'''bash
-# Con el wrapper de Maven
+```bash
 ./mvnw test
+```
 
-# Con Maven instalado de forma global
-mvn test
+### Tests de rendimiento
+
+Miden la latencia y el throughput de los servicios bajo carga concurrente. No requieren base de datos ni Docker (usan mocks).
+
+```bash
+./mvnw test -Pperformance
+```
+
+### Tests de integración
+
+Arrancan la aplicación completa contra la base de datos real. Requieren Docker en ejecución.
+
+**1. Configura el perfil de test** (solo la primera vez):
+
+```bash
+cp src/test/resources/application-test.properties.example src/test/resources/application-test.properties
+```
+
+Edita el archivo y rellena los valores de tu `.env`:
+
+```properties
+spring.datasource.password=YOUR_DB_ROOT_PASSWORD
+igdb.client-id=YOUR_IGDB_CLIENT_ID
+igdb.client-secret=YOUR_IGDB_CLIENT_SECRET
+```
+
+> `application-test.properties` está en `.gitignore` y nunca se sube al repositorio.
+
+**2. Levanta la base de datos:**
+
+```bash
+docker compose up -d
+```
+
+**3. Ejecuta el test:**
+
+```bash
+./mvnw test -Dtest=WishlistIntegrationTest
+```
 
 ---
 
