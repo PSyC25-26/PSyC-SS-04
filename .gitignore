@@ -31,3 +31,10 @@ replay_pid*
 .classpath
 .project
 .settings/
+
+# Local secrets — copy from *.example and fill in values
+.env
+**/application-test.properties
+
+# Runtime-generated logs
+**/logs/
