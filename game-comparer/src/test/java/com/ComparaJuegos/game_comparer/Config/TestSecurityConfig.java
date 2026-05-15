@@ -11,22 +11,17 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-@Profile("!test")
-public class SeguridadConfig {
+@Profile("test")
+public class TestSecurityConfig {
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/registro", "/inicioSesion", "/iniciar", "/css/**", "/estilos.css")
-                        .permitAll()// Sin sesion puede acceder a registro y login
-                        .anyRequest().authenticated()// Sin sesion al resto de paginas no puede acceder
-                )
-                .formLogin(form -> form
-                        .loginPage("/inicioSesion") // Escucha en el iniciosesion mediante el form implementado ahi
-                        .defaultSuccessUrl("/perfil", true) // A donde vas al iniciar sesion
-                        .permitAll())
-                .logout(logout -> logout.permitAll());
-
+                        .anyRequest().permitAll())
+                .csrf(csrf -> csrf.disable())
+                .formLogin(form -> form.disable())
+                .logout(logout -> logout.disable());
         return http.build();
     }
 

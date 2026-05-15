@@ -20,7 +20,6 @@ import com.ComparaJuegos.game_comparer.models.Usuario;
 import com.ComparaJuegos.game_comparer.models.Wishlist;
 import com.ComparaJuegos.game_comparer.service.BusquedaService;
 
-
 @Controller
 public class BusquedaControlador {
 
@@ -29,8 +28,8 @@ public class BusquedaControlador {
     private final WishlistRepositorio wishlistRepositorio;
 
     public BusquedaControlador(BusquedaService busquedaService,
-                                UsuarioRepositorio usuarioRepositorio,
-                                WishlistRepositorio wishlistRepositorio) {
+            UsuarioRepositorio usuarioRepositorio,
+            WishlistRepositorio wishlistRepositorio) {
         this.busquedaService = busquedaService;
         this.usuarioRepositorio = usuarioRepositorio;
         this.wishlistRepositorio = wishlistRepositorio;
@@ -38,8 +37,8 @@ public class BusquedaControlador {
 
     @GetMapping("/buscar")
     public String buscar(@RequestParam(required = false) String q,
-                         @AuthenticationPrincipal UserDetails userDetails,
-                         Model model) {
+            @AuthenticationPrincipal UserDetails userDetails,
+            Model model) {
         List<ResultadoBusquedaDTO> resultados = List.of();
         if (q != null && !q.isBlank()) {
             resultados = busquedaService.buscar(q);
@@ -55,29 +54,37 @@ public class BusquedaControlador {
         return "buscar";
     }
 
-
     @PostMapping("/wishlist/agregar")
     public String agregar(@ModelAttribute ResultadoBusquedaDTO dto,
-                          @RequestParam Long wishlistId) {
+            @RequestParam Long wishlistId) {
 
         Long id = busquedaService.agregarAWishlist(dto, wishlistId);
-        //Requiere el id despues de wishlist
+        // Requiere el id despues de wishlist
         return "redirect:/wishlist/" + id;
     }
 
     @PostMapping("/wishlist/eliminar")
     public String eliminar(@RequestParam Long wishlistId, @RequestParam Long juegoId) {
         busquedaService.eliminarDeWishlist(wishlistId, juegoId);
-        
+
         return "redirect:/wishlist/" + wishlistId;
     }
-    
 
     @GetMapping("/wishlist/{id}")
     public String verWishlist(@PathVariable Long id,
-                              @AuthenticationPrincipal UserDetails userDetails,
-                              Model model) {
-        Usuario usuario = usuarioRepositorio.findByEmail(userDetails.getUsername()).orElseThrow();
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestParam(required = false) Long testUserId,
+            Model model) {
+        Usuario usuario;
+        if (testUserId != null) {
+            usuario = usuarioRepositorio.findById(testUserId)
+                    .orElseThrow(() -> new RuntimeException("Usuario test no encontrado con ID: " + testUserId));
+        } else if (userDetails != null) {
+            usuario = usuarioRepositorio.findByEmail(userDetails.getUsername()).orElseThrow();
+        } else {
+            throw new RuntimeException("testUserId debe ser proporcionado o usuario debe estar autenticado");
+        }
+
         Wishlist wishlist = wishlistRepositorio.findById(id).orElseThrow();
 
         if (!wishlist.getUsuario().getId().equals(usuario.getId())) {
