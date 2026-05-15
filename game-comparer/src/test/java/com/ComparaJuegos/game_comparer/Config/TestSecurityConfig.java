@@ -18,20 +18,15 @@ public class TestSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/registro", "/inicioSesion", "/iniciar", "/css/**", "/estilos.css")
-                        .permitAll()
-                        .anyRequest().authenticated())
-                .formLogin(form -> form
-                        .loginPage("/inicioSesion")
-                        .defaultSuccessUrl("/perfil", true)
-                        .permitAll())
-                .logout(logout -> logout.permitAll())
-                .csrf(csrf -> csrf.disable());
+                        .anyRequest().permitAll())
+                .csrf(csrf -> csrf.disable())
+                .formLogin(form -> form.disable())
+                .logout(logout -> logout.disable());
         return http.build();
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(); // o NoOpPasswordEncoder para tests más rápidos
+        return new BCryptPasswordEncoder();
     }
 }
