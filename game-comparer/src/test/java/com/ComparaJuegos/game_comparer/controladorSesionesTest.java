@@ -1,4 +1,5 @@
 package com.ComparaJuegos.game_comparer;
+
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -37,19 +38,19 @@ class controladorSesionesTest {
     private controladorSesiones controlador;
 
     @Test
-    void testInicio(){
+    void testInicio() {
         String vista = controlador.inicio();
         assertEquals("principal", vista);
     }
 
     @Test
-    void testIniciarSesion(){
+    void testIniciarSesion() {
         String iniciarSes = controlador.IniciarSesion();
         assertEquals("inicioSesion", iniciarSes);
     }
 
     @Test
-    void testRegistro(){
+    void testRegistro() {
         Usuario usuario1 = new Usuario();
 
         String registrarse = controlador.registrarse(modelo);
@@ -60,13 +61,13 @@ class controladorSesionesTest {
     }
 
     @Test
-    void testPruebaLogin(){
+    void testPruebaLogin() {
         String pagPrue = controlador.paginaDePrueba();
         assertEquals("prueba_login", pagPrue);
     }
 
     @Test
-    void testRegistrarUsuario(){
+    void testRegistrarUsuario() {
         Usuario usuario1 = new Usuario();
         usuario1.setContrasena("12345");
 
@@ -76,13 +77,13 @@ class controladorSesionesTest {
 
         assertEquals("redirect:/inicioSesion", resultado);
         assertEquals("ContraEncriptada", usuario1.getContrasena());
-        
+
         verify(passwordEncoder).encode("12345");
         verify(usuarioRepositorio).save(usuario1);
     }
 
     @Test
-    void testCrearPropiaWishlist(){
+    void testCrearPropiaWishlist() {
         Usuario usuarioAct = new Usuario();
         usuarioAct.setId(1L);
 
@@ -100,11 +101,11 @@ class controladorSesionesTest {
         assertEquals("MisDeseados", usuarioBD.getWishlists().get(0).getNombre());
 
         verify(usuarioRepositorio).save(usuarioBD);
-        
+
     }
 
     @Test
-    void testCrearPropialista_UsuarioNoExist(){
+    void testCrearPropialista_UsuarioNoExist() {
         Usuario usuarioAct = new Usuario();
         usuarioAct.setId(1L);
 
@@ -123,32 +124,25 @@ class controladorSesionesTest {
         usuario.setId(1L);
         usuario.setEmail("test@mail.com");
 
-        UserDetails userDetails = org.mockito.Mockito.mock(UserDetails.class);
-
-        when(userDetails.getUsername()).thenReturn("test@mail.com");
-        when(usuarioRepositorio.findByEmail("test@mail.com"))
+        when(usuarioRepositorio.findById(1L))
                 .thenReturn(Optional.of(usuario));
 
-        String vista = controlador.verPerfil(modelo, userDetails);
+        String vista = controlador.verPerfil(modelo, 1L);
 
         assertEquals("perfil", vista);
 
         verify(modelo).addAttribute("usuario", usuario);
-        verify(usuarioRepositorio).findByEmail("test@mail.com");
+        verify(usuarioRepositorio).findById(1L);
     }
 
     @Test
     void testVerPerfil_usuarioNoExiste() {
-        UserDetails userDetails = org.mockito.Mockito.mock(UserDetails.class);
-
-        when(userDetails.getUsername()).thenReturn("noexiste@mail.com");
-        when(usuarioRepositorio.findByEmail("noexiste@mail.com"))
+        when(usuarioRepositorio.findById(999L))
                 .thenReturn(Optional.empty());
 
         assertThrows(
-                java.util.NoSuchElementException.class,
-                () -> controlador.verPerfil(modelo, userDetails)
-        );
+                RuntimeException.class,
+                () -> controlador.verPerfil(modelo, 999L));
     }
 
 }

@@ -26,7 +26,6 @@ import com.ComparaJuegos.game_comparer.models.Usuario;
 import com.ComparaJuegos.game_comparer.models.Wishlist;
 import com.ComparaJuegos.game_comparer.service.BusquedaService;
 
-
 @ExtendWith(MockitoExtension.class)
 class BusquedaControladorTests {
 
@@ -48,11 +47,11 @@ class BusquedaControladorTests {
 	@InjectMocks
 	private BusquedaControlador controlador;
 
-	@Test//Revisar
-	void testAgreagarAWishlist(){
+	@Test // Revisar
+	void testAgreagarAWishlist() {
 
 		ResultadoBusquedaDTO dto_resul = new ResultadoBusquedaDTO();
-		long id_wishlist = 1L;//Para que conozca al 1 como Long, le ponemos una L despues
+		long id_wishlist = 1L;// Para que conozca al 1 como Long, le ponemos una L despues
 
 		when(busquedaService.agregarAWishlist(dto_resul, id_wishlist)).thenReturn(99L);
 
@@ -64,7 +63,7 @@ class BusquedaControladorTests {
 	}
 
 	@Test
-	void testEliminarWishlist(){
+	void testEliminarWishlist() {
 
 		long wishlistId = 1L;
 		long juegoId = 2L;
@@ -73,11 +72,11 @@ class BusquedaControladorTests {
 
 		assertEquals("redirect:/wishlist/1", resultado);
 
-		verify(busquedaService).eliminarDeWishlist(wishlistId, juegoId);//Verifica que entra
+		verify(busquedaService).eliminarDeWishlist(wishlistId, juegoId);// Verifica que entra
 	}
 
-	@Test//Cuando acierta lo que se busca NO es null
-	void testBuscarJuegos(){
+	@Test // Cuando acierta lo que se busca NO es null
+	void testBuscarJuegos() {
 		String id = "Battlefield";
 
 		when(detallesUsuario.getUsername()).thenReturn("userTest@gmail.com");
@@ -100,9 +99,9 @@ class BusquedaControladorTests {
 
 	}
 
-	@Test //Ahora cuando lo que se busca ES null
-	void busquedaNull(){
-		//Si te tiene que pasar algo
+	@Test // Ahora cuando lo que se busca ES null
+	void busquedaNull() {
+		// Si te tiene que pasar algo
 		when(detallesUsuario.getUsername()).thenReturn("usuarioTest@gmail.com");
 
 		Usuario usuario = new Usuario();
@@ -121,9 +120,9 @@ class BusquedaControladorTests {
 		assertEquals("buscar", vista);
 	}
 
-	@Test //No existe el juego
-	void BusquedaDeJuegoNoExistente(){
-		String q = "heldorse";//Juego que buscamos y que se que o existe
+	@Test // No existe el juego
+	void BusquedaDeJuegoNoExistente() {
+		String q = "heldorse";// Juego que buscamos y que se que o existe
 
 		when(detallesUsuario.getUsername()).thenReturn("userTestNull@gmail.com");
 
@@ -136,15 +135,15 @@ class BusquedaControladorTests {
 		});
 	}
 
-	@Test//Test de, la wishlist existe
-	void EntrarWishlist(){
+	@Test // Test de, la wishlist existe
+	void EntrarWishlist() {
 
 		Usuario usuario = new Usuario();
 		usuario.setId(1L);
 
 		Wishlist listaDeseos = new Wishlist();
 		listaDeseos.setId(10L);
-		//Hay que crear 2 usuarios separados para que funcione bien
+		// Hay que crear 2 usuarios separados para que funcione bien
 		Usuario usuarioDos = new Usuario();
 		usuarioDos.setId(1L);
 
@@ -155,16 +154,16 @@ class BusquedaControladorTests {
 		when(usuarioRepositorio.findByEmail("UsuarioWishlist@gmail.com")).thenReturn(Optional.of(usuario));
 		when(wishlistRepositorio.findById(10L)).thenReturn(Optional.of(listaDeseos));
 
-		String vista = controlador.verWishlist(10L, detallesUsuario, modelo);
+		String vista = controlador.verWishlist(10L, detallesUsuario, null, modelo);
 
 		assertEquals("detalle-wishlist", vista);
 		verify(modelo).addAttribute("wishlist", listaDeseos);
 
 	}
 
-	//Si no existe error
-	@Test//Acceso denegado
-	void ImposibleEntrarWishlist(){
+	// Si no existe error
+	@Test // Acceso denegado
+	void ImposibleEntrarWishlist() {
 
 		Usuario usuario = new Usuario();
 		usuario.setId(1L);
@@ -182,10 +181,10 @@ class BusquedaControladorTests {
 		when(usuarioRepositorio.findByEmail(any())).thenReturn(Optional.of(usuario));
 		when(wishlistRepositorio.findById(10L)).thenReturn(Optional.of(listaDeseos));
 
-		String vista = controlador.verWishlist(10L, detallesUsuario, modelo);
+		String vista = controlador.verWishlist(10L, detallesUsuario, null, modelo);
 
 		assertEquals("redirect:/buscar", vista);
-		verify(modelo, never()).addAttribute(eq("wishlist"), any());//Si devuelve algo es que tienes acceso
+		verify(modelo, never()).addAttribute(eq("wishlist"), any());// Si devuelve algo es que tienes acceso
 
 	}
 }
