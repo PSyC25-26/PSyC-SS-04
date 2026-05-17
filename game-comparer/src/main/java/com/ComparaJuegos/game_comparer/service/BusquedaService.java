@@ -162,18 +162,15 @@ public class BusquedaService {
             CheapSharkPrecioDTO price =
                     cheapSharkService.buscarPrecios(igdb.getName());
 
-            OfertasHomeDTO dto = new OfertasHomeDTO();
-
-            dto.setName(igdb.getName());
-            dto.setImage(igdb.getCoverUrl());
-            dto.setSteamUrl(price.getSteamUrl());
-            dto.setEpicUrl(price.getEpicUrl());
+            if (price == null) {
+                continue;
+            }
 
             Double finalPrice = null;
 
-            if (price != null && price.getSteamPrice() != null) {
+            if (price.getSteamPrice() != null) {
                 finalPrice = price.getSteamPrice();
-            } else if (price != null && price.getEpicPrice() != null) {
+            } else if (price.getEpicPrice() != null) {
                 finalPrice = price.getEpicPrice();
             }
 
@@ -181,6 +178,11 @@ public class BusquedaService {
                 continue; // no hay oferta válida
             }
 
+            OfertasHomeDTO dto = new OfertasHomeDTO();
+            dto.setName(igdb.getName());
+            dto.setImage(igdb.getCoverUrl());
+            dto.setSteamUrl(price.getSteamUrl());
+            dto.setEpicUrl(price.getEpicUrl());
             dto.setPrice(finalPrice);
 
 

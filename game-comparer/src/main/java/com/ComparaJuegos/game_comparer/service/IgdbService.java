@@ -1,6 +1,8 @@
 package com.ComparaJuegos.game_comparer.service;
 
 import com.ComparaJuegos.game_comparer.dto.IgdbJuegoDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
@@ -14,6 +16,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class IgdbService {
+
+    private static final Logger log = LoggerFactory.getLogger(IgdbService.class);
 
     private final IgdbTokenService tokenService;
     private final RestClient restClient;
@@ -36,16 +40,21 @@ public class IgdbService {
                 "involved_companies.company.name, involved_companies.developer, involved_companies.publisher; " +
                 "search \"" + query + "\"; limit 5;";
 
-        List<Map<String, Object>> response = restClient.post()
-                .uri("https://api.igdb.com/v4/games")
-                .header("Client-ID", tokenService.getClientId())
-                .header("Authorization", "Bearer " + tokenService.getToken())
-                .header("Content-Type", "text/plain")
-                .body(body)
-                .retrieve()
-                .body(List.class);
+        try {
+            List<Map<String, Object>> response = restClient.post()
+                    .uri("https://api.igdb.com/v4/games")
+                    .header("Client-ID", tokenService.getClientId())
+                    .header("Authorization", "Bearer " + tokenService.getToken())
+                    .header("Content-Type", "text/plain")
+                    .body(body)
+                    .retrieve()
+                    .body(List.class);
 
-        return parseGameResponse(response);
+            return parseGameResponse(response);
+        } catch (Exception e) {
+            log.error("IGDB API call failed for query '{}': {}", query, e.getMessage());
+            return List.of();
+        }
     }
 
     /**

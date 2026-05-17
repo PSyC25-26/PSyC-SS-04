@@ -44,6 +44,9 @@ public class BusquedaControlador {
             resultados = busquedaService.buscar(q);
         }
 
+        if (userDetails == null) {
+            return "redirect:/inicioSesion";
+        }
         Usuario usuario = usuarioRepositorio.findByEmail(userDetails.getUsername()).orElseThrow();
         List<Wishlist> wishlists = wishlistRepositorio.findByUsuario(usuario);
         List<OfertasHomeDTO> ofertas = busquedaService.getOfertasHome();
