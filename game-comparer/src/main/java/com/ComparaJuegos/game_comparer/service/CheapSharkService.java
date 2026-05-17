@@ -42,21 +42,30 @@ public class CheapSharkService {
             String gameId = findBestMatch(games, gameName);
             if (gameId == null) return dto;
 
-            // Step 2: fetch ALL deals for this game in one call, filter by store in memory
-            List<Map<String, Object>> deals = restClient.get()
-                    .uri("https://www.cheapshark.com/api/1.0/deals?gameID={gid}", gameId)
+            // Step 2: fetch game details (includes deals per store)
+            @SuppressWarnings("unchecked")
+            Map<String, Object> gameDetails = restClient.get()
+                    .uri("https://www.cheapshark.com/api/1.0/games?id={id}", gameId)
                     .retrieve()
-                    .body(List.class);
+                    .body(Map.class);
 
+            if (gameDetails == null) return dto;
+
+            @SuppressWarnings("unchecked")
+            List<Map<String, Object>> deals = (List<Map<String, Object>>) gameDetails.get("deals");
             if (deals == null) return dto;
 
             for (Map<String, Object> deal : deals) {
                 String storeId = String.valueOf(deal.get("storeID"));
-                String salePriceStr = (String) deal.get("salePrice");
-                String dealId = (String) deal.get("dealID");
-                if (salePriceStr == null) continue;
-
-                double price = Double.parseDouble(salePriceStr);
+                Object priceObj = deal.get("price");
+                if (priceObj == null) continue;
+                double price;
+                try {
+                    price = Double.parseDouble(priceObj.toString());
+                } catch (NumberFormatException nfe) {
+                    continue;
+                }
+                String dealId = deal.get("dealID") != null ? deal.get("dealID").toString() : null;
                 String url = dealId != null ? "https://www.cheapshark.com/redirect?dealID=" + dealId : null;
 
                 if (STEAM_STORE_ID.equals(storeId) && dto.getSteamPrice() == null) {
@@ -68,34 +77,60 @@ public class CheapSharkService {
                 }
             }
         } catch (Exception e) {
-            // Rate limited or unavailable — return empty prices rather than crashing
+            System.err.println("[CheapShark] Error fetching prices for '" + gameName + "': " + e.getMessage());
         }
         return dto;
     }
 
     private String findBestMatch(List<Map<String, Object>> games, String targetName) {
         String lower = targetName.toLowerCase();
+        // Pass 1: exact match (case-insensitive)
         for (Map<String, Object> g : games) {
-            @SuppressWarnings("unchecked")
-            Map<String, Object> info = (Map<String, Object>) g.get("info");
-            if (info != null) {
-                String title = (String) info.get("title");
-                if (title != null && title.equalsIgnoreCase(targetName)) {
+            String title = extractTitle(g);
+            if (title != null && title.equalsIgnoreCase(targetName)) {
+                return String.valueOf(g.get("gameID"));
+            }
+        }
+        // Pass 2: CheapShark title contains target
+        for (Map<String, Object> g : games) {
+            String title = extractTitle(g);
+            if (title != null && title.toLowerCase().contains(lower)) {
+                return String.valueOf(g.get("gameID"));
+            }
+        }
+        // Pass 3: target contains CheapShark title (IGDB title is longer, e.g. has edition/subtitle)
+        for (Map<String, Object> g : games) {
+            String title = extractTitle(g);
+            if (title != null && lower.contains(title.toLowerCase())) {
+                return String.valueOf(g.get("gameID"));
+            }
+        }
+        // Pass 4: normalized — strip ™ ® punctuation differences
+        String normalizedTarget = lower.replaceAll("[^a-z0-9 ]", "").trim();
+        for (Map<String, Object> g : games) {
+            String title = extractTitle(g);
+            if (title != null) {
+                String normalizedTitle = title.toLowerCase().replaceAll("[^a-z0-9 ]", "").trim();
+                if (normalizedTitle.equals(normalizedTarget)
+                        || normalizedTitle.contains(normalizedTarget)
+                        || normalizedTarget.contains(normalizedTitle)) {
                     return String.valueOf(g.get("gameID"));
                 }
             }
         }
-        for (Map<String, Object> g : games) {
-            @SuppressWarnings("unchecked")
-            Map<String, Object> info = (Map<String, Object>) g.get("info");
-            if (info != null) {
-                String title = (String) info.get("title");
-                if (title != null && title.toLowerCase().contains(lower)) {
-                    return String.valueOf(g.get("gameID"));
-                }
-            }
+        return null;
+    }
+
+    private String extractTitle(Map<String, Object> game) {
+        Object external = game.get("external");
+        if (external != null) return external.toString();
+        @SuppressWarnings("unchecked")
+        Map<String, Object> info = (Map<String, Object>) game.get("info");
+        if (info != null) {
+            Object title = info.get("title");
+            if (title != null) return title.toString();
         }
-        return String.valueOf(games.get(0).get("gameID"));
+        return null;
     }
 
 
