@@ -22,8 +22,9 @@ public class SeguridadConfig {
                         .anyRequest().authenticated()// Sin sesion al resto de paginas no puede acceder
                 )
                 .formLogin(form -> form
-                        .loginPage("/inicioSesion") // Escucha en el iniciosesion mediante el form implementado ahi
-                        .defaultSuccessUrl("/perfil", true) // A donde vas al iniciar sesion
+                        .loginPage("/inicioSesion")
+                        .loginProcessingUrl("/inicioSesion")
+                        .defaultSuccessUrl("/perfil", true)
                         .permitAll())
                 .logout(logout -> logout.permitAll());
 

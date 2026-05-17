@@ -19,8 +19,9 @@
         </br>
             <label for="password" class="label_texto">Contraseña </label>
             <input type="password" name="password" placeholder="Contraseña">
-            <!--Hay que recordar que la ñ puede causar problemas por el acento-->
         </br>
+            <p th:if="${param.error}" style="color: red;">Email o contraseña incorrectos. Inténtalo de nuevo.</p>
+            <p th:if="${param.serverError}" style="color: red;">Error del servidor. Inténtalo más tarde.</p>
             <button type="submit" style="margin: 15px;">Iniciar sesión</button>
 
         </form>

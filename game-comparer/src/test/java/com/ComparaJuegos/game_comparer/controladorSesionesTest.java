@@ -73,7 +73,7 @@ class controladorSesionesTest {
 
         when(passwordEncoder.encode(usuario1.getContrasena())).thenReturn("ContraEncriptada");
 
-        String resultado = controlador.registrarUsuario(usuario1);
+        String resultado = controlador.registrarUsuario(usuario1, new org.springframework.ui.ExtendedModelMap());
 
         assertEquals("redirect:/inicioSesion", resultado);
         assertEquals("ContraEncriptada", usuario1.getContrasena());

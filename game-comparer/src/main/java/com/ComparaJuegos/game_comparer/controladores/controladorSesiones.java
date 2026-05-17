@@ -1,5 +1,6 @@
 package com.ComparaJuegos.game_comparer.controladores;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -52,10 +53,18 @@ public class controladorSesiones {
     }
 
     @PostMapping("/registro")
-    public String registrarUsuario(@ModelAttribute Usuario usuario) {
-        usuario.setContrasena(passwordEncoder.encode(usuario.getContrasena()));
-        usuarioRepositorio.save(usuario);
-        return "redirect:/inicioSesion";
+    public String registrarUsuario(@ModelAttribute Usuario usuario, Model model) {
+        try {
+            usuario.setContrasena(passwordEncoder.encode(usuario.getContrasena()));
+            usuarioRepositorio.save(usuario);
+            return "redirect:/inicioSesion";
+        } catch (DataIntegrityViolationException e) {
+            model.addAttribute("errorEmail", true);
+            return "registro";
+        } catch (Exception e) {
+            model.addAttribute("errorServidor", true);
+            return "registro";
+        }
     }
 
     // metodo para la creacion de wishlist (aun le falta plantilla y pagina)

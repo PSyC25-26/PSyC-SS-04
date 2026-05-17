@@ -39,6 +39,8 @@
         
         </br>
 
+            <p th:if="${errorEmail}" style="color: red;">Este email ya está en uso. Prueba con otro.</p>
+            <p th:if="${errorServidor}" style="color: red;">Error del servidor. Inténtalo más tarde.</p>
             <input type="submit" value="Registrarse" style="margin: 15px;">
 
         </form>
