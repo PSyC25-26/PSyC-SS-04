@@ -36,7 +36,7 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Install Playwright Browsers
-        run: mvn exec:java -e -Dexec.mainClass=com.microsoft.playwright.CLI -Dexec.args="install" --file game-comparer/pom.xml
+        run: npx playwright install --with-deps
             
       - name: BD
         run: mvn -B package --file game-comparer/pom.xml
