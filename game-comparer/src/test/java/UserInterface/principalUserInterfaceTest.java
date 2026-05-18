@@ -44,7 +44,10 @@ public class principalUserInterfaceTest {
     @BeforeAll
     static void definirNavegador() {
         playwright = Playwright.create();
-        navegador=playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
+        boolean esGitHubActions = System.getenv("GITHUB_ACTIONS") != null;
+        navegador = playwright.chromium().launch(
+                new BrowserType.LaunchOptions().setHeadless(esGitHubActions)
+        );
     }
 
     @BeforeEach
