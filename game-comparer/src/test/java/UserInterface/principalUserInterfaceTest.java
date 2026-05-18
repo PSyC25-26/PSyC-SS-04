@@ -56,7 +56,7 @@ public class principalUserInterfaceTest {
     @Test
     @DisplayName("Testeando el botón del registro")
     void testBotonRegistro() {
-        pagina.navigate("http://localhost:" + port + "/registro");
+        pagina.navigate("http://localhost:" + port + "/iniciar");
         pagina.click("text=REGISTRATE");
         assertTrue(pagina.url().contains("/registro"));
     }
@@ -64,7 +64,7 @@ public class principalUserInterfaceTest {
     @Test
     @DisplayName("Testeando botón de inicio de sesión")
     void testBotonInicioSesion() {
-        pagina.navigate("http://localhost:" + port + "/inicioSesion");
+        pagina.navigate("http://localhost:" + port + "/iniciar");
         pagina.click("text=INICIA SESIÓN");
         assertTrue(pagina.url().contains("/inicioSesion"));
     }
