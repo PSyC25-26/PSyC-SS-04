@@ -13,27 +13,12 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest(
         classes = GameComparerApplication.class,
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        properties = {
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 
-                "spring.main.allow-bean-definition-overriding=true",
-
-
-                "spring.datasource.url=jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=MySQL",
-                "spring.datasource.username=sa",
-                "spring.datasource.password=",
-                "spring.datasource.driver-class-name=org.h2.Driver",
-
-
-
-
-                "spring.jpa.database-platform=org.hibernate.dialect.H2Dialect",
-                "spring.jpa.hibernate.ddl-auto=create-drop"
-        }
 )
+@ActiveProfiles("test")
 public class principalUserInterfaceTest {
-    @MockitoBean
-    private IgdbTokenService igdbTokenService;
+
     @LocalServerPort
     private int port;
     private static Playwright playwright;
