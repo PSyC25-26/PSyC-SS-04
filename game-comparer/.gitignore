@@ -34,5 +34,5 @@ build/
 
 ### Secrets ###
 src/test/resources/application.properties
-src/test/resources/application-test.properties
 .env
+.env.local

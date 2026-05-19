@@ -49,7 +49,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-@TestPropertySource(properties = {"spring.main.allow-bean-definition-overriding=true"})
+@TestPropertySource(properties = { "spring.main.allow-bean-definition-overriding=true" })
 public class WishlistIntegrationTest {
 
     @LocalServerPort
