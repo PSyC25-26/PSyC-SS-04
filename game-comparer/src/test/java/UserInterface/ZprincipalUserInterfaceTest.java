@@ -1,7 +1,6 @@
 package UserInterface;
 
 import com.ComparaJuegos.game_comparer.GameComparerApplication;
-import com.ComparaJuegos.game_comparer.service.IgdbTokenService;
 import com.microsoft.playwright.*;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -9,7 +8,6 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest(
@@ -28,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
         "spring.jpa.hibernate.ddl-auto=update"
 })
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-public class principalUserInterfaceTest {
+public class ZprincipalUserInterfaceTest {
 
     @LocalServerPort
     private int port;
