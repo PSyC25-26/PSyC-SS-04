@@ -1,12 +1,52 @@
+<!--! 
+    /file: plantilla.html
+    /brief: Plantilla reutilizada en todas las pestañas de la apliacción
+
+    Contenido de la plantilla:
+
+    - Header y Footer principales
+    - Body reutilizable con botones para navegar
+
+-->
 <!DOCTYPE html>
 <html lang="es" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <!--!
+        /brief: Configuración del documento HTML.
+
+        Incluye:
+            - Configuración UTF8.
+            - Response viewport.
+            - Archivo CSS con estilos de referencia.
+    -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" th:href="@{/estilos.css}">
     <title>PlantillaTH</title>
 </head>
+
+    <!--!
+        /brief Fragmento reutilizable del body
+
+        /details
+        Este fragmento se utiliza en todas las pestañas como referencia de plantilla, así se puede llegar a cualquier lado del 
+        documento desde cualquier punto, siempre que se este registrado. Para ello utiliamos Thymeleaf:
+        th:replace o th:insert.
+        
+        Contiene:
+        - Cabecera con mensaje de bienbenida
+        - Cuerpo con botones de navegación
+        - Footer común con lista de derechos reservados
+
+    -->
 <body th:fragment="bodyPlant">
+
+    <!--!
+        /brief Header con mensaje de bienbenida
+
+        /details
+        Fragmento que da la bienbenida al usuario y muestra el título de nuestra aplicación
+    -->
     <header th:fragment="headerPlant">
 
         <h1>Bienvenido a tu comparador de juegos de confianza</h1>
@@ -15,6 +55,18 @@
 
     </header>
 
+    <!--!
+        /brief Cuerpo con botones
+
+        /details
+        Fragmento que implementa botones para moverse por la app, solo visible una vez iniciado sesión.
+
+        Botones:
+        - Inicio: te lleva a la portada principal, fuera de la sesión.
+        - Buscador de juegos: Permite ir al buscador de videojuegos.
+        - Mi perfil: Muestra al usuario sus wishlist y permite crear más.
+        - Cerrar sesión: Permite al usuario cerrar sesión
+    -->
     <nav th:fragment="navPlant" id="principal">
         <span id="botones_inicio">
             <a th:href="@{/iniciar}" class="boton_iniciar">Inicio</a>
@@ -41,6 +93,12 @@
 
     </div>
 
+    <!--!
+        /brief Footer comun 
+
+        /details
+        Contiene las entidades que poseen los derechos de autor.
+    -->
     <footer th:fragment="footerPlant">   
         <h2>Todos los derechos reservados</h2>
         <ul>
