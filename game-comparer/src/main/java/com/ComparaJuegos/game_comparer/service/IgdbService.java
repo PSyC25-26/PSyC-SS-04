@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * @brief Servicio para buscar información de juegos en la API de IGDB.
  *
@@ -24,9 +26,10 @@ import java.util.stream.Collectors;
  * El token OAuth necesario para IGDB se gestiona en {@link IgdbTokenService}.
  */
 @Service
+@Slf4j
 public class IgdbService {
 
-    private static final Logger log = LoggerFactory.getLogger(IgdbService.class);
+    //private static final Logger log = LoggerFactory.getLogger(IgdbService.class);
 
     private final IgdbTokenService tokenService;
     private final RestClient restClient;
@@ -62,6 +65,9 @@ public class IgdbService {
      */
     @SuppressWarnings("unchecked")
     public List<IgdbJuegoDTO> buscar(String query) {
+
+        log.info("Iniciando consulta en la API de IGDB para el término: '{}'", query);
+
         String body = "fields name, summary, cover.image_id, genres.name, first_release_date, " +
                 "involved_companies.company.name, involved_companies.developer, involved_companies.publisher, " +
                 "external_games.uid, external_games.category; " +
@@ -77,7 +83,9 @@ public class IgdbService {
                     .retrieve()
                     .body(List.class);
 
-            return parseGameResponse(response);
+            List<IgdbJuegoDTO> resultados = parseGameResponse(response);
+            log.info("Consulta de IGDB completada. Se encontraron {} resultados para '{}'", resultados.size(), query);
+            return resultados;
         } catch (Exception e) {
             log.error("IGDB API call failed for query '{}': {}", query, e.getMessage());
             return List.of();
@@ -99,7 +107,10 @@ public class IgdbService {
      */
     @SuppressWarnings("unchecked")
     public List<IgdbJuegoDTO> parseGameResponse(List<Map<String, Object>> response) {
-        if (response == null) return List.of();
+        if (response == null) {
+            log.warn("La respuesta recibida de la API de IGDB fue null.");
+            return List.of();
+        }
 
         List<IgdbJuegoDTO> results = new ArrayList<>();
         for (Map<String, Object> game : response) {
