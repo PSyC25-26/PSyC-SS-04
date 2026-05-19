@@ -26,13 +26,16 @@ public class BusquedaService {
 
     private final IgdbService igdbService;
     private final CheapSharkService cheapSharkService;
+    private final SteamService steamService;
     private final JuegoRepositorio juegoRepositorio;
     private final WishlistRepositorio wishlistRepositorio;
 
     public BusquedaService(IgdbService igdbService, CheapSharkService cheapSharkService,
+            SteamService steamService,
             JuegoRepositorio juegoRepositorio, WishlistRepositorio wishlistRepositorio) {
         this.igdbService = igdbService;
         this.cheapSharkService = cheapSharkService;
+        this.steamService = steamService;
         this.juegoRepositorio = juegoRepositorio;
         this.wishlistRepositorio = wishlistRepositorio;
     }
@@ -43,6 +46,23 @@ public class BusquedaService {
 
         for (IgdbJuegoDTO igdb : igdbResults) {
             CheapSharkPrecioDTO prices = cheapSharkService.buscarPrecios(igdb.getName());
+
+            // Fallback: if CheapShark has no Steam price, try Steam API directly
+            if (prices.getSteamPrice() == null) {
+                String appId = prices.getSteamAppId() != null ? prices.getSteamAppId() : igdb.getSteamAppId();
+                // Last resort: search Steam store by game name
+                if (appId == null) {
+                    appId = steamService.findAppIdByName(igdb.getName());
+                }
+                if (appId != null) {
+                    Double steamPrice = steamService.getSteamPrice(appId);
+                    if (steamPrice != null) {
+                        prices.setSteamPrice(steamPrice);
+                        prices.setSteamUrl(steamService.getSteamUrl(appId));
+                    }
+                }
+            }
+
             ResultadoBusquedaDTO dto = new ResultadoBusquedaDTO();
             dto.setName(igdb.getName());
             dto.setDescripcion(igdb.getSummary());

@@ -28,10 +28,10 @@
 
             <div th:each="precio : ${juego.precios}">
                 <a th:if="${precio.url != null}" th:href="${precio.url}" target="_blank">
-                    <span th:text="${precio.tienda}"></span>: <span th:text="${precio.precio} + ' €'"></span>
+                    <span th:text="${precio.tienda}"></span>: <span th:if="${precio.precio == 0}">Gratis</span><span th:if="${precio.precio != 0}" th:text="${precio.precio} + ' €'"></span>
                 </a>
                 <span th:if="${precio.url == null}">
-                    <span th:text="${precio.tienda}"></span>: <span th:text="${precio.precio} + ' €'"></span>
+                    <span th:text="${precio.tienda}"></span>: <span th:if="${precio.precio == 0}">Gratis</span><span th:if="${precio.precio != 0}" th:text="${precio.precio} + ' €'"></span>
                 </span>
             </div>
 
