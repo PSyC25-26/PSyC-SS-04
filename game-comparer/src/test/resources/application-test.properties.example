@@ -1,0 +1,18 @@
+# -------------------------------------------------------
+# Perfil de test — src/test/resources/application-test.properties
+# -------------------------------------------------------
+
+test.mensaje=El perfil test está activo
+
+# Base de datos H2 para tests (sin MySQL)
+spring.datasource.url=jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+spring.datasource.driver-class-name=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=
+spring.jpa.hibernate.ddl-auto=create-drop
+spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+spring.sql.init.mode=never
+
+#Datos dummy para IGDB en tests
+igdb.client-id=${IGDB_CLIENT_ID:dummy}
+igdb.client-secret=${IGDB_CLIENT_SECRET:dummy}
