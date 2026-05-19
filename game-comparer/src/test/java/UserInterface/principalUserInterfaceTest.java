@@ -6,6 +6,7 @@ import com.microsoft.playwright.*;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -17,6 +18,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 )
 @ActiveProfiles("test")
+@TestPropertySource(properties = {
+        "spring.main.allow-bean-definition-overriding=true", // Desbloquea el fallo de seguridad que viste en el log
+        "spring.datasource.url=jdbc:h2:mem:ui_test_db;DB_CLOSE_DELAY=-1;MODE=MySQL", // Base de datos mágica en tu RAM
+        "spring.datasource.driver-class-name=org.h2.Driver",
+        "spring.datasource.username=sa",
+        "spring.datasource.password=",
+        "spring.jpa.database-platform=org.hibernate.dialect.H2Dialect",
+        "spring.jpa.hibernate.ddl-auto=update"
+})
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class principalUserInterfaceTest {
 
     @LocalServerPort
