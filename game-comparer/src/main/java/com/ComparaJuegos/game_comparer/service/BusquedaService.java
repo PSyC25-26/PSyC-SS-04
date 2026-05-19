@@ -63,6 +63,11 @@ public class BusquedaService {
                 }
             }
 
+            // Fallback: if CheapShark has no Epic URL but IGDB gave us an Epic slug, provide a store link
+            if (prices.getEpicUrl() == null && igdb.getEpicSlug() != null) {
+                prices.setEpicUrl("https://store.epicgames.com/en-US/p/" + igdb.getEpicSlug());
+            }
+
             ResultadoBusquedaDTO dto = new ResultadoBusquedaDTO();
             dto.setName(igdb.getName());
             dto.setDescripcion(igdb.getSummary());
