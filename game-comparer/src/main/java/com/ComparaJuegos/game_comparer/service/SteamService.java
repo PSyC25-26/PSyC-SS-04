@@ -6,18 +6,38 @@ import org.springframework.web.client.RestClient;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @brief Servicio para consultar precios directamente desde la API de Steam Store.
+ *
+ * Se usa como fallback cuando CheapShark no tiene precio de Steam para un juego,
+ * lo que ocurre principalmente con juegos free-to-play (p.ej. Team Fortress 2)
+ * o juegos que nunca han estado en oferta.
+ *
+ * Endpoints utilizados:
+ * - appdetails: obtiene el precio dado un Steam App ID.
+ * - storesearch: busca el App ID de un juego por nombre.
+ */
 @Service
 public class SteamService {
 
     private final RestClient restClient;
 
+    /**
+     * @brief Constructor por defecto. Crea un RestClient estándar.
+     */
     public SteamService() {
         this.restClient = RestClient.create();
     }
 
     /**
-     * Returns the current Steam price for a given appId.
-     * Returns 0.0 if the game is free-to-play, the price in euros if paid, or null if unavailable.
+     * @brief Obtiene el precio actual de un juego en Steam dado su App ID.
+     *
+     * Consulta la API de Steam Store (store.steampowered.com/api/appdetails)
+     * con región europea (cc=eu) para obtener precios en euros.
+     *
+     * @param appId Steam App ID del juego (p.ej. "252490" para Rocket League).
+     * @return 0.0 si el juego es free-to-play, el precio en euros si es de pago,
+     *         o null si el juego no está disponible o la petición falla.
      */
     @SuppressWarnings("unchecked")
     public Double getSteamPrice(String appId) {
@@ -48,10 +68,25 @@ public class SteamService {
         return null;
     }
 
+    /**
+     * @brief Construye la URL de la página de un juego en Steam Store.
+     *
+     * @param appId Steam App ID del juego.
+     * @return URL directa a la ficha del juego en store.steampowered.com.
+     */
     public String getSteamUrl(String appId) {
         return "https://store.steampowered.com/app/" + appId;
     }
 
+    /**
+     * @brief Busca el Steam App ID de un juego por nombre usando el buscador de Steam Store.
+     *
+     * Se usa como último recurso cuando ni CheapShark ni IGDB proporcionan el App ID.
+     * Aplica dos pasadas de coincidencia: exacta y por contenido.
+     *
+     * @param gameName Nombre del juego a buscar.
+     * @return Steam App ID como String si se encuentra, o null si no hay coincidencia.
+     */
     @SuppressWarnings("unchecked")
     public String findAppIdByName(String gameName) {
         try {

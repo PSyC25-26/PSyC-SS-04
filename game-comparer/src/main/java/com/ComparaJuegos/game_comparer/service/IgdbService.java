@@ -1,6 +1,8 @@
 package com.ComparaJuegos.game_comparer.service;
 
 import com.ComparaJuegos.game_comparer.dto.IgdbJuegoDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
@@ -12,24 +14,52 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * @brief Servicio para buscar información de juegos en la API de IGDB.
+ *
+ * Consulta la API de IGDB (api.igdb.com/v4) para obtener metadatos de juegos:
+ * nombre, descripción, portada, géneros, fecha de lanzamiento, desarrollador,
+ * publisher y enlaces a tiendas externas (Steam App ID, Epic slug).
+ *
+ * El token OAuth necesario para IGDB se gestiona en {@link IgdbTokenService}.
+ */
 @Service
 public class IgdbService {
+
+    private static final Logger log = LoggerFactory.getLogger(IgdbService.class);
 
     private final IgdbTokenService tokenService;
     private final RestClient restClient;
 
+    /**
+     * @brief Constructor principal. Spring inyecta el IgdbTokenService automáticamente.
+     * @param tokenService Servicio que gestiona el token OAuth de IGDB.
+     */
     @Autowired
     public IgdbService(IgdbTokenService tokenService) {
         this.tokenService = tokenService;
         this.restClient = RestClient.create();
     }
 
-    /** Secondary constructor — allows injecting a RestClient in tests. */
+    /**
+     * @brief Constructor secundario para inyección en tests.
+     * @param tokenService Servicio de token (puede ser un mock).
+     * @param restClient   RestClient a usar (normalmente un mock en tests unitarios).
+     */
     public IgdbService(IgdbTokenService tokenService, RestClient restClient) {
         this.tokenService = tokenService;
         this.restClient = restClient;
     }
 
+    /**
+     * @brief Busca juegos en IGDB por nombre y devuelve hasta 5 resultados.
+     *
+     * Incluye en la consulta los campos de external_games para poder extraer
+     * los identificadores de Steam (category=1) y Epic Games (category=26).
+     *
+     * @param query Texto de búsqueda introducido por el usuario.
+     * @return Lista de hasta 5 juegos encontrados, o lista vacía si falla la petición.
+     */
     @SuppressWarnings("unchecked")
     public List<IgdbJuegoDTO> buscar(String query) {
         String body = "fields name, summary, cover.image_id, genres.name, first_release_date, " +
@@ -37,22 +67,35 @@ public class IgdbService {
                 "external_games.uid, external_games.category; " +
                 "search \"" + query + "\"; limit 5;";
 
-        List<Map<String, Object>> response = restClient.post()
-                .uri("https://api.igdb.com/v4/games")
-                .header("Client-ID", tokenService.getClientId())
-                .header("Authorization", "Bearer " + tokenService.getToken())
-                .header("Content-Type", "text/plain")
-                .body(body)
-                .retrieve()
-                .body(List.class);
+        try {
+            List<Map<String, Object>> response = restClient.post()
+                    .uri("https://api.igdb.com/v4/games")
+                    .header("Client-ID", tokenService.getClientId())
+                    .header("Authorization", "Bearer " + tokenService.getToken())
+                    .header("Content-Type", "text/plain")
+                    .body(body)
+                    .retrieve()
+                    .body(List.class);
 
-        return parseGameResponse(response);
+            return parseGameResponse(response);
+        } catch (Exception e) {
+            log.error("IGDB API call failed for query '{}': {}", query, e.getMessage());
+            return List.of();
+        }
     }
 
     /**
-     * Maps a raw IGDB API response (list of game maps) to IgdbJuegoDTO objects.
-     * Extracted to allow direct unit/perf testing of the parsing logic without
-     * needing to mock the HTTP layer.
+     * @brief Convierte la respuesta raw de IGDB en una lista de {@link IgdbJuegoDTO}.
+     *
+     * Método separado del HTTP para permitir tests unitarios y de rendimiento
+     * que prueben el parseo sin necesidad de mockear la capa de red.
+     *
+     * Extrae los identificadores de plataformas externas de external_games:
+     * - category 1  → Steam App ID (se guarda en steamAppId)
+     * - category 26 → Epic Games slug (se guarda en epicSlug)
+     *
+     * @param response Lista de mapas con la respuesta JSON de IGDB, o null.
+     * @return Lista de DTOs parseados, o lista vacía si la respuesta es null.
      */
     @SuppressWarnings("unchecked")
     public List<IgdbJuegoDTO> parseGameResponse(List<Map<String, Object>> response) {
@@ -102,17 +145,19 @@ public class IgdbService {
                 }
             }
 
-            // Steam App ID (external_games category 1 = Steam)
+            // External platform IDs (category 1 = Steam, category 26 = Epic Games)
             List<Map<String, Object>> externalGames = (List<Map<String, Object>>) game.get("external_games");
             if (externalGames != null) {
                 for (Map<String, Object> eg : externalGames) {
                     Object category = eg.get("category");
-                    if (category != null && ((Number) category).intValue() == 1) {
-                        Object uid = eg.get("uid");
-                        if (uid != null) {
-                            dto.setSteamAppId(uid.toString());
-                            break;
-                        }
+                    if (category == null) continue;
+                    int cat = ((Number) category).intValue();
+                    Object uid = eg.get("uid");
+                    if (uid == null) continue;
+                    if (cat == 1 && dto.getSteamAppId() == null) {
+                        dto.setSteamAppId(uid.toString());
+                    } else if (cat == 26 && dto.getEpicSlug() == null) {
+                        dto.setEpicSlug(uid.toString());
                     }
                 }
             }

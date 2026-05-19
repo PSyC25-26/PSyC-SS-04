@@ -113,7 +113,8 @@
                     <a th:if="${r.epicPrice != null}" th:href="${r.epicUrl}" target="_blank">
                         Epic: <span th:if="${r.epicPrice == 0}">Gratis</span><span th:if="${r.epicPrice != 0}" th:text="${r.epicPrice} + ' €'"></span>
                     </a>
-                    <span th:if="${r.epicPrice == null}">No disponible en Epic</span>
+                    <a th:if="${r.epicPrice == null and r.epicUrl != null}" th:href="${r.epicUrl}" target="_blank">Ver en Epic</a>
+                    <span th:if="${r.epicPrice == null and r.epicUrl == null}">No disponible en Epic</span>
                 </div>
 
                 <form th:if="${!#lists.isEmpty(wishlists)}" method="post" action="/wishlist/agregar">
