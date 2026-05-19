@@ -7,7 +7,10 @@ import org.springframework.web.client.RestClient;
 import java.time.Instant;
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class IgdbTokenService {
 
     @Value("${igdb.client-id}")
@@ -23,8 +26,11 @@ public class IgdbTokenService {
 
     public synchronized String getToken() {
         if (cachedToken != null && Instant.now().isBefore(tokenExpiresAt)) {
+            log.info("Uso de token IGDB desde la caché interna. Válido hasta: {}", tokenExpiresAt);
             return cachedToken;
         }
+
+        log.info("El token ha expirado o no existe. Solicitando nuevo token a Twitch...");
 
         String url = "https://id.twitch.tv/oauth2/token"
                 + "?client_id=" + clientId
