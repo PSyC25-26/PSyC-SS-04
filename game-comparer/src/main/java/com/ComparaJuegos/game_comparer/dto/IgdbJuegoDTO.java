@@ -13,4 +13,5 @@ public class IgdbJuegoDTO {
     private LocalDate firstReleaseDate;
     private String developer;
     private String publisher;
+    private String steamAppId;
 }
