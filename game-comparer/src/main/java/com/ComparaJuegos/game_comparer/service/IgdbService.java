@@ -37,7 +37,8 @@ public class IgdbService {
     @SuppressWarnings("unchecked")
     public List<IgdbJuegoDTO> buscar(String query) {
         String body = "fields name, summary, cover.image_id, genres.name, first_release_date, " +
-                "involved_companies.company.name, involved_companies.developer, involved_companies.publisher; " +
+                "involved_companies.company.name, involved_companies.developer, involved_companies.publisher, " +
+                "external_games.uid, external_games.category; " +
                 "search \"" + query + "\"; limit 5;";
 
         try {
@@ -106,6 +107,21 @@ public class IgdbService {
                     }
                     if (Boolean.TRUE.equals(ic.get("publisher")) && dto.getPublisher() == null) {
                         dto.setPublisher(companyName);
+                    }
+                }
+            }
+
+            // Steam App ID (external_games category 1 = Steam)
+            List<Map<String, Object>> externalGames = (List<Map<String, Object>>) game.get("external_games");
+            if (externalGames != null) {
+                for (Map<String, Object> eg : externalGames) {
+                    Object category = eg.get("category");
+                    if (category != null && ((Number) category).intValue() == 1) {
+                        Object uid = eg.get("uid");
+                        if (uid != null) {
+                            dto.setSteamAppId(uid.toString());
+                            break;
+                        }
                     }
                 }
             }

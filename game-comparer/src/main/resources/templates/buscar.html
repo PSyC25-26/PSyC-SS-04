@@ -106,12 +106,12 @@
 
                 <div>
                     <a th:if="${r.steamPrice != null}" th:href="${r.steamUrl}" target="_blank">
-                        Steam: <span th:text="${r.steamPrice} + ' €'"></span>
+                        Steam: <span th:if="${r.steamPrice == 0}">Gratis</span><span th:if="${r.steamPrice != 0}" th:text="${r.steamPrice} + ' €'"></span>
                     </a>
                     <span th:if="${r.steamPrice == null}">No disponible en Steam</span>
                     &nbsp;
                     <a th:if="${r.epicPrice != null}" th:href="${r.epicUrl}" target="_blank">
-                        Epic: <span th:text="${r.epicPrice} + ' €'"></span>
+                        Epic: <span th:if="${r.epicPrice == 0}">Gratis</span><span th:if="${r.epicPrice != 0}" th:text="${r.epicPrice} + ' €'"></span>
                     </a>
                     <span th:if="${r.epicPrice == null}">No disponible en Epic</span>
                 </div>

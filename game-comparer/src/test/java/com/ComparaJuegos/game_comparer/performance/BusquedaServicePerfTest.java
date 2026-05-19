@@ -7,6 +7,7 @@ import com.ComparaJuegos.game_comparer.dto.IgdbJuegoDTO;
 import com.ComparaJuegos.game_comparer.service.BusquedaService;
 import com.ComparaJuegos.game_comparer.service.CheapSharkService;
 import com.ComparaJuegos.game_comparer.service.IgdbService;
+import com.ComparaJuegos.game_comparer.service.SteamService;
 import com.github.noconnor.junitperf.JUnitPerfTest;
 import com.github.noconnor.junitperf.JUnitPerfTestRequirement;
 import org.apache.logging.log4j.LogManager;
@@ -47,6 +48,7 @@ class BusquedaServicePerfTest {
 
     @Mock private IgdbService igdbService;
     @Mock private CheapSharkService cheapSharkService;
+    @Mock private SteamService steamService;
     @Mock private JuegoRepositorio juegoRepositorio;
     @Mock private WishlistRepositorio wishlistRepositorio;
 
@@ -54,7 +56,7 @@ class BusquedaServicePerfTest {
 
     @BeforeEach
     void setUp() {
-        busquedaService = new BusquedaService(igdbService, cheapSharkService, juegoRepositorio, wishlistRepositorio);
+        busquedaService = new BusquedaService(igdbService, cheapSharkService, steamService, juegoRepositorio, wishlistRepositorio);
 
         IgdbJuegoDTO game1 = new IgdbJuegoDTO();
         game1.setName("The Witcher 3");
