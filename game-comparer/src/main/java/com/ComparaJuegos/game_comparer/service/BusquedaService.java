@@ -21,6 +21,8 @@ import com.ComparaJuegos.game_comparer.models.Precio;
 import com.ComparaJuegos.game_comparer.models.Tienda;
 import com.ComparaJuegos.game_comparer.models.Wishlist;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * @brief Servicio principal de búsqueda y gestión de juegos.
  *
@@ -33,6 +35,7 @@ import com.ComparaJuegos.game_comparer.models.Wishlist;
  * el historial de precios en base de datos.
  */
 @Service
+@Slf4j
 public class BusquedaService {
 
     private final IgdbService igdbService;
@@ -132,36 +135,55 @@ public class BusquedaService {
      */
     @Transactional
     public Long agregarAWishlist(ResultadoBusquedaDTO dto, Long wishlistId) {
-        Optional<Juego> existente = juegoRepositorio.findFirstByNameIgnoreCase(dto.getName());
+        log.info("Intentando agregar el juego '{}' a la wishlist con ID: {}", dto.getName(), wishlistId);
+        
+        try {
+            Optional<Juego> existente = juegoRepositorio.findFirstByNameIgnoreCase(dto.getName());
+            Juego juego;
+            
+            if (existente.isEmpty()) {
+                log.info("El juego '{}' no existe en la base de datos. Creando nueva entidad.", dto.getName());
+                juego = new Juego();
+                juego.setName(dto.getName());
+                juego.setDescripcion(dto.getDescripcion());
+                juego.setImagen(dto.getImagen());
+                juego.setGenero(dto.getGenero());
+                juego.setReleaseDate(dto.getReleaseDate());
+                juego.setDeveloper(dto.getDeveloper());
+                juego.setPublisher(dto.getPublisher());
 
-        Juego juego;
-        if (existente.isEmpty()) {
-            juego = new Juego();
-            juego.setName(dto.getName());
-            juego.setDescripcion(dto.getDescripcion());
-            juego.setImagen(dto.getImagen());
-            juego.setGenero(dto.getGenero());
-            juego.setReleaseDate(dto.getReleaseDate());
-            juego.setDeveloper(dto.getDeveloper());
-            juego.setPublisher(dto.getPublisher());
+                addPrecio(juego, Tienda.STEAM, dto.getSteamPrice(), dto.getSteamUrl());
+                addPrecio(juego, Tienda.EPIC, dto.getEpicPrice(), dto.getEpicUrl());
+                juego = juegoRepositorio.save(juego);
+                log.debug("Nuevo juego guardado con ID generado: {}", juego.getId());
+            } else {
+                juego = existente.get();
+                log.info("El juego '{}' ya existe (ID: {}). Actualizando precios y registrando historial.", juego.getName(), juego.getId());
+                updateOrCreatePrecio(juego, Tienda.STEAM, dto.getSteamPrice(), dto.getSteamUrl());
+                updateOrCreatePrecio(juego, Tienda.EPIC, dto.getEpicPrice(), dto.getEpicUrl());
+                juego = juegoRepositorio.save(juego);
+            }
 
-            addPrecio(juego, Tienda.STEAM, dto.getSteamPrice(), dto.getSteamUrl());
-            addPrecio(juego, Tienda.EPIC, dto.getEpicPrice(), dto.getEpicUrl());
-            juego = juegoRepositorio.save(juego);
-        } else {
-            juego = existente.get();
-            updateOrCreatePrecio(juego, Tienda.STEAM, dto.getSteamPrice(), dto.getSteamUrl());
-            updateOrCreatePrecio(juego, Tienda.EPIC, dto.getEpicPrice(), dto.getEpicUrl());
-            juego = juegoRepositorio.save(juego);
+            Wishlist wishlist = wishlistRepositorio.findById(wishlistId)
+                    .orElseThrow(() -> {
+                        log.error("No se encontró ninguna wishlist con el ID: {}", wishlistId);
+                        return new java.util.NoSuchElementException("Wishlist no encontrada");
+                    });
+                    
+            if (!wishlist.getJuegos().contains(juego)) {
+                wishlist.getJuegos().add(juego);
+                wishlistRepositorio.save(wishlist);
+                log.info("Juego '{}' vinculado con éxito a la wishlist {}.", juego.getName(), wishlistId);
+            } else {
+                log.warn("El juego '{}' ya se encuentra en la wishlist {}. No se duplica.", juego.getName(), wishlistId);
+            }
+
+            return wishlistId;
+            
+        } catch (Exception e) {
+            log.error("Error crítico al agregar el juego '{}' a la wishlist {}. Motivo: {}", dto.getName(), wishlistId, e.getMessage(), e);
+            throw e;
         }
-
-        Wishlist wishlist = wishlistRepositorio.findById(wishlistId).orElseThrow();
-        if (!wishlist.getJuegos().contains(juego)) {
-            wishlist.getJuegos().add(juego);
-            wishlistRepositorio.save(wishlist);
-        }
-
-        return wishlistId;
     }
 
     /**
@@ -173,14 +195,25 @@ public class BusquedaService {
      */
     @Transactional
     public void eliminarDeWishlist(Long wishlistId, Long juegoId) {
-        Wishlist wishlist = wishlistRepositorio.findById(wishlistId).orElseThrow();
-        Juego juegoElim = juegoRepositorio.findById(juegoId).orElseThrow(() -> new RuntimeException("Juego no encontrado, lo siento!"));
+        log.info("Solicitud para eliminar el juego con ID {} de la wishlist con ID {}", juegoId, wishlistId);
+    
+        try {
+            Wishlist wishlist = wishlistRepositorio.findById(wishlistId).orElseThrow();
+            
+            Juego juegoElim = juegoRepositorio.findById(juegoId).orElseThrow(() -> {
+                log.error("Fallo al eliminar: El juego con ID {} no existe en la base de datos.", juegoId);
+                return new RuntimeException("Juego no encontrado, lo siento!");
+            });
 
-        if (wishlist.getJuegos().contains(juegoElim)) {
-            wishlist.getJuegos().remove(juegoElim);
+            if (wishlist.getJuegos().contains(juegoElim)) {
+                wishlist.getJuegos().remove(juegoElim);
+            }
+            wishlistRepositorio.save(wishlist);
+
+        } catch (Exception e) { 
+            log.error("Error al procesar la baja de la wishlist. WishlistId: {}, JuegoId: {}. Motivo: {}", wishlistId, juegoId, e.getMessage(), e);
+            throw e;
         }
-
-        wishlistRepositorio.save(wishlist);
     }
 
     /**

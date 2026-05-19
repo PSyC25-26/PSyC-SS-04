@@ -6,6 +6,8 @@ import org.springframework.web.client.RestClient;
 import java.util.List;
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * @brief Servicio para consultar precios directamente desde la API de Steam Store.
  *
@@ -18,6 +20,7 @@ import java.util.Map;
  * - storesearch: busca el App ID de un juego por nombre.
  */
 @Service
+@Slf4j
 public class SteamService {
 
     private final RestClient restClient;
@@ -63,7 +66,7 @@ public class SteamService {
                 if (finalPrice != null) return finalPrice.doubleValue() / 100.0;
             }
         } catch (Exception e) {
-            System.err.println("[Steam] Error fetching price for appId '" + appId + "': " + e.getMessage());
+            log.error("[Steam] Error fetching price for appId '" + appId + "': " + e.getMessage());
         }
         return null;
     }
@@ -119,7 +122,7 @@ public class SteamService {
                 }
             }
         } catch (Exception e) {
-            System.err.println("[Steam] Error searching '" + gameName + "': " + e.getMessage());
+            log.error("[Steam] Error searching '" + gameName + "': " + e.getMessage());
         }
         return null;
     }
