@@ -107,12 +107,14 @@ public class IgdbService {
             if (externalGames != null) {
                 for (Map<String, Object> eg : externalGames) {
                     Object category = eg.get("category");
-                    if (category != null && ((Number) category).intValue() == 1) {
-                        Object uid = eg.get("uid");
-                        if (uid != null) {
-                            dto.setSteamAppId(uid.toString());
-                            break;
-                        }
+                    if (category == null) continue;
+                    int cat = ((Number) category).intValue();
+                    Object uid = eg.get("uid");
+                    if (uid == null) continue;
+                    if (cat == 1 && dto.getSteamAppId() == null) {
+                        dto.setSteamAppId(uid.toString());
+                    } else if (cat == 26 && dto.getEpicSlug() == null) {
+                        dto.setEpicSlug(uid.toString());
                     }
                 }
             }

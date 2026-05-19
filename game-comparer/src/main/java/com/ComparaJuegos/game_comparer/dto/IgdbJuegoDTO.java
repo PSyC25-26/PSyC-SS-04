@@ -14,4 +14,5 @@ public class IgdbJuegoDTO {
     private String developer;
     private String publisher;
     private String steamAppId;
+    private String epicSlug;
 }
