@@ -114,6 +114,11 @@
     		<version>5.3.1</version>
     		<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
+		</dependency>
 		
 		<!-- Mockito para mocking en tests -->
 		<dependency>
@@ -169,6 +174,12 @@
 			<groupId>me.paulschwarz</groupId>
 			<artifactId>spring-dotenv</artifactId>
 			<version>4.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.microsoft.playwright</groupId>
+			<artifactId>playwright</artifactId>
+			<version>1.49.0</version>
+			<scope>test</scope>
 		</dependency>
 
 	</dependencies>

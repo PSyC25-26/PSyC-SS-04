@@ -35,6 +35,8 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
           cache: maven
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
             
       - name: BD
         run: mvn -B package --file game-comparer/pom.xml
