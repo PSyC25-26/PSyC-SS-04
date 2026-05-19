@@ -1,4 +1,4 @@
-package UserInterface;
+/*package UserInterface;
 
 import com.ComparaJuegos.game_comparer.GameComparerApplication;
 import com.microsoft.playwright.*;
@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
         "spring.jpa.hibernate.ddl-auto=update"
 })
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-public class ZprincipalUserInterfaceTest {
+public class principalUserInterfaceTest {
 
     @LocalServerPort
     private int port;
