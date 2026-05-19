@@ -1,14 +1,58 @@
+<!--! 
+    /file: inicioSesion.html
+    /brief: archivo donde el usuario introduce sus credenciales para iniciar sesión
+
+    Ruta de la página: http://localhost:8080/inicioSesion
+
+    Contenido de la página:
+
+    - Header y Footer principales
+    - Cuestionario para iniciar sesión
+    - Botones para navegación
+
+-->
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <link rel="stylesheet" th:href="@{/estilos.css}">
 <head>
+    <!--!
+        /brief Configuración del documento HTML.
+
+        Incluye:
+            - Configuración UTF8.
+            - Response viewport.
+            - Archivo CSS con estilos de referencia.
+    -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar sesión</title>
 </head>
+
 <body>
+    <!--!
+        /brief Usdado Thymeleaf para implantar cabecera
+    -->
     <header th:replace="plantilla :: headerPlant"></header>
 
+    <!--!
+        /brief Cuestionario para inciar sesión
+
+        /details 
+        Este cuestionario permite iniciar sesión si los datos coinciden con los de algún usuario, se tratan los siguientes campos:
+        - Email del usuario: Email con el que se registro, un campo String
+        - Contraseña: La contraseña del usuario al que esta asociado el correo, un campo String
+
+
+        El cuestionario se envia por método Post y se utiliza Thymeleaf para el envio de datos: 
+        - th:action : URL a la que se enviara el formulario
+        - th:field : Hace binding automaticamente entre los input y una propiedad del objeto Usuario
+
+        /section Fallo al iniciar sesión
+
+        Si los datos introducidos son incorrectos, el cuestionario se limpiara, y la terminara en error
+
+
+    -->
     <div id="div_inicio_y_registro">
         <h1><strong>Inicio de sesión</strong></h1>
 
@@ -28,6 +72,18 @@
     
     <br>
 
+    <!--!
+        /brief Botones de navegación
+
+        /details
+
+        Se incluyen dos botones para permitir:
+        - Navegar a la pestaña principal
+        - Dirigirse al cuestionario de registro
+
+        Se utiliza Thymeleaf para los enlaces de los botones:
+        th:href
+    -->
     <div>
         <div id="botones_inicio">
             <span class="boton_iniciar">
@@ -43,6 +99,9 @@
         </div>
     </div>
 
+    <!--!
+        /brief Usdado Thymeleaf para implantar cabecera
+    -->
     <footer th:replace="plantilla :: footerPlant"></footer>
 </body>
 </html>

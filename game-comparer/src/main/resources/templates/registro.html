@@ -1,14 +1,56 @@
+<!--! 
+    /file: registro.html
+    /brief: archivo donde el usuario puede registrar un usuario
+
+    Ruta de la página: http://localhost:8080/registro
+
+    Contenido de la página:
+
+    - Header y Footer principales
+    - Cuestionario para registrarse
+    - Botones para navegación
+
+-->
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <link rel="stylesheet" th:href="@{/estilos.css}">
 <head>
+    <!--!
+        /brief: Configuración del documento HTML.
+
+        Incluye:
+            - Configuración UTF8.
+            - Response viewport.
+            - Archivo CSS con estilos de referencia.
+    -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrarse</title>
 </head>
 <body>
+    <!--!
+        /brief Usdado Thymeleaf para implantar cabecera
+    -->
     <header th:replace="plantilla :: headerPlant"></header>
 
+    <!--!
+        /brief Cuestionario de registro
+
+        /details
+
+        Cuestionario HTML que permite registrar usuarios mediante rellenar los siguientes campos:
+        - Nombre del usuario: String, nombre por el que la página se dirigira al usuario
+        - Email del usuario: String, email que se usara de referencia para iniciar sesión
+        - Contraseña: campo int que se cifrara antes de guardarse en la BD para mayor seguridad
+        - Fecha de nacimiento: Introduce un campo date que se usara como referencia de cumpleaños
+        - País de residencia: Introduce un String que se usara como país de residencia
+        - Boton de confirmación: Permite mandar los datos a la BD
+
+        El cuestionario se envia por método Post y se utiliza Thymeleaf para el envio y recogida de datos del cuestionario: 
+        - th:action : URL a la que se enviara el formulario
+        - th:object : Asocia el formulario a un objeto java, en este caso, a un usuario 
+        - th:field : Hace binding automaticamente entre los input y una propiedad del objeto Usuario
+    -->
     <div id="div_inicio_y_registro">
         <h2><strong>Registro de usuarios</strong></h2>
 
@@ -46,6 +88,18 @@
 
     <br>
 
+    <!--!
+        /brief Botones de navegación
+
+        /details
+
+        Se incluyen dos botones para permitir:
+        - Navegar a la pestaña principal
+        - Dirigirse al cuestionario de inicio sesión
+
+        Se utiliza Thymeleaf para los enlaces de los botones:
+        th:href
+    -->
     <div id="botones_inicio">
         <span class="boton_iniciar">
             <a th:href="@{/iniciar}">
@@ -60,6 +114,9 @@
         </span>
     </div>
 
+    <!--!
+        /brief Usdado Thymeleaf para implantar cabecera
+    -->
     <footer th:replace="plantilla :: footerPlant"></footer>
     
 </body>
