@@ -2,6 +2,8 @@
     /file: inicioSesion.html
     /brief: archivo donde el usuario introduce sus credenciales para iniciar sesión
 
+    Ruta de la página: http://localhost:8080/inicioSesion
+
     Contenido de la página:
 
     - Header y Footer principales
@@ -36,7 +38,19 @@
         /brief Cuestionario para inciar sesión
 
         /details 
-        Este cuestionario permite iniciar sesión si introduces el correo y y la contraseña que corresponden a un usuario
+        Este cuestionario permite iniciar sesión si los datos coinciden con los de algún usuario, se tratan los siguientes campos:
+        - Email del usuario: Email con el que se registro, un campo String
+        - Contraseña: La contraseña del usuario al que esta asociado el correo, un campo String
+
+
+        El cuestionario se envia por método Post y se utiliza Thymeleaf para el envio de datos: 
+        - th:action : URL a la que se enviara el formulario
+        - th:field : Hace binding automaticamente entre los input y una propiedad del objeto Usuario
+
+        /section Fallo al iniciar sesión
+
+        Si los datos introducidos son incorrectos, el cuestionario se limpiara, y la terminara en error
+
 
     -->
     <div id="div_inicio_y_registro">
@@ -66,6 +80,9 @@
         Se incluyen dos botones para permitir:
         - Navegar a la pestaña principal
         - Dirigirse al cuestionario de registro
+
+        Se utiliza Thymeleaf para los enlaces de los botones:
+        th:href
     -->
     <div>
         <div id="botones_inicio">
