@@ -42,6 +42,17 @@ public class CheapSharkService {
             String gameId = findBestMatch(games, gameName);
             if (gameId == null) return dto;
 
+            // Extract steamAppID from search results so BusquedaService can use it as fallback
+            for (Map<String, Object> g : games) {
+                if (gameId.equals(String.valueOf(g.get("gameID")))) {
+                    Object appId = g.get("steamAppID");
+                    if (appId != null && !appId.toString().isBlank()) {
+                        dto.setSteamAppId(appId.toString());
+                    }
+                    break;
+                }
+            }
+
             // Step 2: fetch game details (includes deals per store)
             @SuppressWarnings("unchecked")
             Map<String, Object> gameDetails = restClient.get()

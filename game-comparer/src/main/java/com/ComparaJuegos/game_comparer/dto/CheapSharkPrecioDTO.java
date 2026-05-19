@@ -8,4 +8,5 @@ public class CheapSharkPrecioDTO {
     private String steamUrl;
     private Double epicPrice;
     private String epicUrl;
+    private String steamAppId;
 }

@@ -47,12 +47,19 @@ public class BusquedaService {
         for (IgdbJuegoDTO igdb : igdbResults) {
             CheapSharkPrecioDTO prices = cheapSharkService.buscarPrecios(igdb.getName());
 
-            // Fallback: if CheapShark has no Steam price but IGDB gave us a Steam App ID, check Steam directly
-            if (prices.getSteamPrice() == null && igdb.getSteamAppId() != null) {
-                Double steamPrice = steamService.getSteamPrice(igdb.getSteamAppId());
-                if (steamPrice != null) {
-                    prices.setSteamPrice(steamPrice);
-                    prices.setSteamUrl(steamService.getSteamUrl(igdb.getSteamAppId()));
+            // Fallback: if CheapShark has no Steam price, try Steam API directly
+            if (prices.getSteamPrice() == null) {
+                String appId = prices.getSteamAppId() != null ? prices.getSteamAppId() : igdb.getSteamAppId();
+                // Last resort: search Steam store by game name
+                if (appId == null) {
+                    appId = steamService.findAppIdByName(igdb.getName());
+                }
+                if (appId != null) {
+                    Double steamPrice = steamService.getSteamPrice(appId);
+                    if (steamPrice != null) {
+                        prices.setSteamPrice(steamPrice);
+                        prices.setSteamUrl(steamService.getSteamUrl(appId));
+                    }
                 }
             }
 

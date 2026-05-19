@@ -3,6 +3,7 @@ package com.ComparaJuegos.game_comparer.service;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -49,5 +50,42 @@ public class SteamService {
 
     public String getSteamUrl(String appId) {
         return "https://store.steampowered.com/app/" + appId;
+    }
+
+    @SuppressWarnings("unchecked")
+    public String findAppIdByName(String gameName) {
+        try {
+            Map<String, Object> response = restClient.get()
+                    .uri("https://store.steampowered.com/api/storesearch?term={name}&l=english&cc=eu", gameName)
+                    .retrieve()
+                    .body(Map.class);
+
+            if (response == null) return null;
+
+            List<Map<String, Object>> items = (List<Map<String, Object>>) response.get("items");
+            if (items == null || items.isEmpty()) return null;
+
+            String targetLower = gameName.toLowerCase();
+
+            // Pass 1: exact match
+            for (Map<String, Object> item : items) {
+                Object nameObj = item.get("name");
+                if (nameObj != null && nameObj.toString().equalsIgnoreCase(gameName)) {
+                    Object id = item.get("id");
+                    return id != null ? id.toString() : null;
+                }
+            }
+            // Pass 2: Steam title contains game name
+            for (Map<String, Object> item : items) {
+                Object nameObj = item.get("name");
+                if (nameObj != null && nameObj.toString().toLowerCase().contains(targetLower)) {
+                    Object id = item.get("id");
+                    return id != null ? id.toString() : null;
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("[Steam] Error searching '" + gameName + "': " + e.getMessage());
+        }
+        return null;
     }
 }
