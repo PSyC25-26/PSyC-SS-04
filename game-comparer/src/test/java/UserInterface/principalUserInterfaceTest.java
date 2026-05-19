@@ -1,4 +1,4 @@
-/*package UserInterface;
+package UserInterface;
 
 import com.ComparaJuegos.game_comparer.GameComparerApplication;
 import com.microsoft.playwright.*;
@@ -16,16 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 )
 @ActiveProfiles("test")
-@TestPropertySource(properties = {
-        "spring.main.allow-bean-definition-overriding=true", // Desbloquea el fallo de seguridad que viste en el log
-        "spring.datasource.url=jdbc:h2:mem:ui_test_db;DB_CLOSE_DELAY=-1;MODE=MySQL", // Base de datos mágica en tu RAM
-        "spring.datasource.driver-class-name=org.h2.Driver",
-        "spring.datasource.username=sa",
-        "spring.datasource.password=",
-        "spring.jpa.database-platform=org.hibernate.dialect.H2Dialect",
-        "spring.jpa.hibernate.ddl-auto=update"
-})
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+
 public class principalUserInterfaceTest {
 
     @LocalServerPort
@@ -77,4 +68,4 @@ public class principalUserInterfaceTest {
     }
 
 
-}*/
+}
