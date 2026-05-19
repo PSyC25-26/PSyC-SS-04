@@ -1,3 +1,11 @@
+/**
+ * @file inicioSesionUserInterfaceTest.java
+ * @author Equipo Caza Ofertas Gaming (COG)
+ * * Pruebas de interfaz de usuario (UI) para la pantalla de inicio de sesión (Login).
+ * Se utiliza Playwright para automatizar la interacción con el formulario de autenticación.
+ * Se cubren los flujos de envío del formulario y la navegación hacia el registro o el inicio.
+ */
+
 package UserInterface;
 
 import com.ComparaJuegos.game_comparer.GameComparerApplication;
@@ -10,6 +18,10 @@ import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * Clase de pruebas de interfaz para el formulario y navegación de inicio de sesión.
+ * Configura el entorno de Spring Boot en un puerto aleatorio y gestiona las instancias de Playwright.
+ */
 @SpringBootTest(
         classes = GameComparerApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
@@ -24,6 +36,10 @@ public class inicioSesionUserInterfaceTest {
     private BrowserContext contexto;
     private Page pagina;
 
+    /**
+     * Inicializa el motor de Playwright y levanta el navegador Chromium.
+     * Si se detecta un entorno de integración continua (GitHub Actions), se ejecuta en modo headless.
+     */
     @BeforeAll
     static void definirNavegador() {
         playwright = Playwright.create();
@@ -33,29 +49,38 @@ public class inicioSesionUserInterfaceTest {
         );
     }
 
+    /**
+     * Crea un contexto web aislado y abre una nueva pestaña limpia en el navegador
+     * antes de dar comienzo a cada caso de prueba.
+     */
     @BeforeEach
     void crearContexto() {
         contexto = navegador.newContext();
         pagina = contexto.newPage();
     }
 
+    /**
+     * Prueba el envío del formulario de inicio de sesión.
+     * Introduce credenciales de prueba en los campos de texto, efectúa el click de envío
+     * y comprueba de forma básica que la acción del botón responde correctamente en la interfaz.
+     */
     @Test
     @DisplayName("Testeando el envío del formulario de login")
     void testFormularioLogin() {
-        // 1. Ir a la pantalla de inicio de sesión
         pagina.navigate("http://localhost:" + port + "/inicioSesion");
 
-        // 2. Rellenar los campos usando los 'name' exactos de tu HTML
         pagina.fill("input[name='username']", "user@test.com");
         pagina.fill("input[name='password']", "Password123!");
 
-        // 3. Hacer clic en el botón de enviar
         pagina.click("button[type='submit']");
 
-        // 4. Al no tener token al menos que funcione el boton
         assertTrue(pagina.url() != null);
     }
 
+    /**
+     * Prueba el enlace de retorno al inicio desde la pantalla de login.
+     * Verifica que al pulsar en "Vuelta al inicio" se redirige de manera correcta a /iniciar.
+     */
     @Test
     @DisplayName("Testeando botón de vuelta al inicio desde el login")
     void testBotonVueltaInicioDesdeLogin() {
@@ -64,6 +89,10 @@ public class inicioSesionUserInterfaceTest {
         assertTrue(pagina.url().contains("/iniciar"));
     }
 
+    /**
+     * Prueba el botón de acceso rápido al registro de cuentas desde el login.
+     * Verifica que al hacer click en "REGISTRATE" se redirige de forma exitosa a /registro.
+     */
     @Test
     @DisplayName("Testeando botón de ir a Registrarse desde el login")
     void testBotonIrARegistroDesdeLogin() {
@@ -72,11 +101,18 @@ public class inicioSesionUserInterfaceTest {
         assertTrue(pagina.url().contains("/registro"));
     }
 
+    /**
+     * Cierra el contexto del navegador y limpia las cookies temporales tras finalizar cada test.
+     */
     @AfterEach
     void cerrarContexto() {
         contexto.close();
     }
 
+    /**
+     * Detiene por completo el navegador Chromium y destruye la instancia global de Playwright
+     * una vez completados todos los tests de la clase.
+     */
     @AfterAll
     static void cerrarNavegador() {
         navegador.close();
