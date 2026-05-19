@@ -10,6 +10,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * @brief Servicio para obtener precios de juegos desde la API de CheapShark.
  *
@@ -19,6 +21,7 @@ import java.util.Map;
  * {@link BusquedaService} aplica fallbacks adicionales.
  */
 @Service
+@Slf4j
 public class CheapSharkService {
 
     private final RestClient restClient;
@@ -58,6 +61,9 @@ public class CheapSharkService {
     @SuppressWarnings("unchecked")
     public CheapSharkPrecioDTO buscarPrecios(String gameName) {
         CheapSharkPrecioDTO dto = new CheapSharkPrecioDTO();
+
+        log.info("Iniciando búsqueda de precios en CheapShark para el juego: '{}'", gameName);
+
         try {
             // Step 1: search for the game
             List<Map<String, Object>> games = restClient.get()
@@ -65,10 +71,17 @@ public class CheapSharkService {
                     .retrieve()
                     .body(List.class);
 
-            if (games == null || games.isEmpty()) return dto;
-
+            if (games == null || games.isEmpty()){
+                log.warn("No se encontraron resultados en CheapShark para: '{}'", gameName);
+                return dto;
+            }
             String gameId = findBestMatch(games, gameName);
-            if (gameId == null) return dto;
+            if (gameId == null){
+                log.warn("No se encontró una coincidencia aceptable en CheapShark para: '{}'", gameName);
+                return dto;
+            }
+
+            log.info("Juego '{}' mapeado exitosamente al gameID de CheapShark: {}", gameName, gameId);
 
             // Extract steamAppID from search results so BusquedaService can use it as fallback
             for (Map<String, Object> g : games) {
@@ -102,6 +115,7 @@ public class CheapSharkService {
                 try {
                     price = Double.parseDouble(priceObj.toString());
                 } catch (NumberFormatException nfe) {
+                    log.warn("No se pudo parsear el precio '{}' para la tienda ID {} en el juego: '{}'", priceObj, storeId, gameName);
                     continue;
                 }
                 String dealId = deal.get("dealID") != null ? deal.get("dealID").toString() : null;
@@ -116,7 +130,7 @@ public class CheapSharkService {
                 }
             }
         } catch (Exception e) {
-            System.err.println("[CheapShark] Error fetching prices for '" + gameName + "': " + e.getMessage());
+            log.error("[CheapShark] Error fetching prices for '" + gameName + "': " + e.getMessage());
         }
         return dto;
     }
