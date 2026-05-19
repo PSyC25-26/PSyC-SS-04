@@ -1,3 +1,27 @@
+/**
+ * @file WishlistIntegrationTest.java
+ * @author Equipo Caza Ofertas Gaming (COG)
+ * 
+ * Test de integración para el flujo completo de wishlist.
+ * 
+ * IMPORTANTE: Para evitar problemas con sesiones y cookies, se utiliza el
+ * perfil "test" que desactiva la seguridad (ver TestSecurityConfig). 
+ * El controlador /perfil acepta un parámetro opcional "testUserId" que permite 
+ * acceder al perfil de un usuario sin necesidad de autenticación.
+ * 
+ * Flujo:
+ * 1. Registrar un nuevo usuario.
+ * 2. Obtener su ID desde la base de datos.
+ * 3. Acceder a /perfil?testUserId=... para extraer la wishlistId (si existe).
+ * 4. Si no existe, crear una wishlist y volver a extraer el ID.
+ * 5. Añadir un juego mock a la wishlist.
+ * 6. Verificar que el juego aparece por su nombre.
+ * 7. Eliminar el juego de la wishlist.
+ * 8. Verificar que ya no aparece.
+ * 
+ * No se utiliza login, cookies ni configuraciones complejas de RestTemplate.
+ */
+
 package com.ComparaJuegos.game_comparer.Integracion;
 
 import java.io.IOException;
@@ -24,28 +48,11 @@ import com.ComparaJuegos.game_comparer.models.Usuario;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Test de integración para el flujo completo de wishlist.
- * 
- * IMPORTANTE: Para evitar problemas con sesiones y cookies, se utiliza el
- * perfil "test"
- * que desactiva la seguridad (ver TestSecurityConfig). El controlador /perfil
- * acepta
- * un parámetro opcional "testUserId" que permite acceder al perfil de un
- * usuario
- * sin necesidad de autenticación. Esto simplifica enormemente el test y lo hace
- * más robusto, similar al enfoque del ejemplo JailQIntegrationTest.
- * 
- * Flujo:
- * 1. Registrar un nuevo usuario.
- * 2. Obtener su ID desde la base de datos.
- * 3. Acceder a /perfil?testUserId=... para extraer la wishlistId (si existe).
- * 4. Si no existe, crear una wishlist y volver a extraer el ID.
- * 5. Añadir un juego mock a la wishlist.
- * 6. Verificar que el juego aparece por su nombre.
- * 7. Eliminar el juego de la wishlist.
- * 8. Verificar que ya no aparece.
- * 
- * No se utiliza login, cookies ni configuraciones complejas de RestTemplate.
+ * Clase de test de integración para el flujo de wishlists.
+ * Configura un entorno de pruebas con perfil "test", desactiva la seguridad
+ * y utiliza un RestTemplate simple para realizar peticiones HTTP.
+ * Se apoya en una base de datos H2 en memoria (por defecto) y limpia
+ * los datos después de cada test mediante @AfterEach.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -58,8 +65,6 @@ public class WishlistIntegrationTest {
     @Autowired
     private UsuarioRepositorio usuarioRepositorio;
 
-    // RestTemplate simple, sin manejo especial de cookies (la seguridad está
-    // desactivada)
     private final RestTemplate restTemplate = new RestTemplate();
 
     private String baseUrl;
@@ -79,6 +84,10 @@ public class WishlistIntegrationTest {
     private static final double MOCK_GAME_STEAM_PRICE = 26.99;
     private static final String MOCK_GAME_STEAM_URL = "https://store.steampowered.com/app/1672970/Minecraft/";
 
+    /**
+     * Configuración inicial antes de cada test.
+     * Construye la URL base, genera un email único y establece la contraseña.
+     */
     @BeforeEach
     void setUp() {
         baseUrl = "http://localhost:" + port;
@@ -86,6 +95,11 @@ public class WishlistIntegrationTest {
         userPassword = "TestPassword123!";
     }
 
+    /**
+     * Limpieza posterior a cada test.
+     * Elimina el usuario de prueba de la base de datos para evitar
+     * efectos colaterales entre tests.
+     */
     @org.junit.jupiter.api.AfterEach
     void cleanup() {
         if (userId != null) {
@@ -94,14 +108,17 @@ public class WishlistIntegrationTest {
         }
     }
 
+    /**
+     * Test principal que ejecuta el flujo completo de wishlist.
+     */
     @Test
     void testWishlistUserStory() {
         registerUser();
-        fetchUserIdFromDatabase(); // Obtener el ID del usuario recién registrado
-        visitProfileWithTestUserId(); // Acceder a /perfil?testUserId=... y extraer wishlistId
+        fetchUserIdFromDatabase();
+        visitProfileWithTestUserId();
         if (wishlistId == null) {
-            createWishlist(); // Crear wishlist si no existe
-            wishlistId = extractWishlistIdFromProfile(); // Volver a cargar perfil para obtener el nuevo ID
+            createWishlist();
+            wishlistId = extractWishlistIdFromProfile();
         }
         addGameToWishlist();
         verifyGameAdded();
@@ -109,9 +126,10 @@ public class WishlistIntegrationTest {
         verifyGameRemoved();
     }
 
-    // -------------------------------------------------------------------------
-    // 1. Registrar usuario (POST /registro)
-    // -------------------------------------------------------------------------
+    /**
+     * Registra un nuevo usuario mediante POST /registro.
+     * Los datos se envían como application/x-www-form-urlencoded.
+     */
     private void registerUser() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -130,18 +148,21 @@ public class WishlistIntegrationTest {
                 "Registro fallido. Status: " + response.getStatusCode());
     }
 
-    // -------------------------------------------------------------------------
-    // 2. Obtener userId desde la base de datos (no necesitamos parsear HTML)
-    // -------------------------------------------------------------------------
+    /**
+     * Obtiene el userId del usuario recién registrado consultando directamente la
+     * base de datos.
+     */
     private void fetchUserIdFromDatabase() {
         Usuario usuario = usuarioRepositorio.findByEmail(userEmail).orElseThrow();
         userId = usuario.getId();
         System.out.println("Usuario ID obtenido de BD: " + userId);
     }
 
-    // -------------------------------------------------------------------------
-    // 3. Visitar /perfil pasando testUserId como parámetro (sin autenticación)
-    // -------------------------------------------------------------------------
+    /**
+     * Visita la página /perfil pasando testUserId como parámetro (sin
+     * autenticación)
+     * y extrae el primer wishlistId encontrado en el HTML.
+     */
     private void visitProfileWithTestUserId() {
         ResponseEntity<String> response = restTemplate.getForEntity(
                 baseUrl + "/perfil?testUserId=" + userId, String.class);
@@ -150,9 +171,9 @@ public class WishlistIntegrationTest {
         wishlistId = extractFirstWishlistId(response.getBody());
     }
 
-    // -------------------------------------------------------------------------
-    // 4. Crear una nueva wishlist (POST /crear-wishlist)
-    // -------------------------------------------------------------------------
+    /**
+     * Crea una nueva wishlist para el usuario mediante POST /crear-wishlist.
+     */
     private void createWishlist() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -165,17 +186,22 @@ public class WishlistIntegrationTest {
                 "Crear wishlist fallido: " + response.getStatusCode());
     }
 
-    // Vuelve a cargar el perfil (con testUserId) y extrae la wishlistId recién
-    // creada
+    /**
+     * Vuelve a cargar el perfil (con testUserId) y extrae la wishlistId recién
+     * creada.
+     * 
+     * @return ID de la wishlist, o null si no se encuentra.
+     */
     private Long extractWishlistIdFromProfile() {
         ResponseEntity<String> response = restTemplate.getForEntity(
                 baseUrl + "/perfil?testUserId=" + userId, String.class);
         return extractFirstWishlistId(response.getBody());
     }
 
-    // -------------------------------------------------------------------------
-    // 5. Añadir juego mock a la wishlist (POST /wishlist/agregar)
-    // -------------------------------------------------------------------------
+    /**
+     * Añade un juego mock a la wishlist mediante POST /wishlist/agregar.
+     * También carga la página de la wishlist para extraer el gameId.
+     */
     private void addGameToWishlist() {
         assertNotNull(wishlistId, "No hay wishlistId para añadir juego");
         HttpHeaders headers = new HttpHeaders();
@@ -208,9 +234,9 @@ public class WishlistIntegrationTest {
         System.out.println("Juego añadido con ID: " + gameId);
     }
 
-    // -------------------------------------------------------------------------
-    // 6. Verificar que el juego aparece (por nombre)
-    // -------------------------------------------------------------------------
+    /**
+     * Verifica que el juego añadido aparece en la wishlist (buscando su nombre).
+     */
     private void verifyGameAdded() {
         ResponseEntity<String> response = restTemplate.getForEntity(
                 baseUrl + "/wishlist/" + wishlistId + "?testUserId=" + userId, String.class);
@@ -219,9 +245,9 @@ public class WishlistIntegrationTest {
                 "La wishlist debería contener el nombre '" + MOCK_GAME_NAME + "'");
     }
 
-    // -------------------------------------------------------------------------
-    // 7. Eliminar el juego de la wishlist (POST /wishlist/eliminar)
-    // -------------------------------------------------------------------------
+    /**
+     * Elimina el juego de la wishlist mediante POST /wishlist/eliminar.
+     */
     private void removeGameFromWishlist() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -234,9 +260,9 @@ public class WishlistIntegrationTest {
                 "Eliminar juego fallido: " + response.getStatusCode());
     }
 
-    // -------------------------------------------------------------------------
-    // 8. Verificar que el juego ya no aparece
-    // -------------------------------------------------------------------------
+    /**
+     * Verifica que el juego ya no aparece en la wishlist tras ser eliminado.
+     */
     private void verifyGameRemoved() {
         ResponseEntity<String> response = restTemplate.getForEntity(
                 baseUrl + "/wishlist/" + wishlistId + "?testUserId=" + userId, String.class);
@@ -251,6 +277,9 @@ public class WishlistIntegrationTest {
 
     /**
      * Extrae el primer /wishlist/{id} del HTML del perfil.
+     * 
+     * @param html Código HTML de la página.
+     * @return ID de la wishlist, o null si no se encuentra.
      */
     private Long extractFirstWishlistId(String html) {
         if (html == null)
@@ -261,7 +290,10 @@ public class WishlistIntegrationTest {
 
     /**
      * Extrae el ID del juego del HTML de detalle de la wishlist.
-     * Busca el campo oculto: <input name="juegoId" value="123">
+     * Busca el campo oculto: <input name="juegoId" value="123">.
+     * 
+     * @param html Código HTML de la página.
+     * @return ID del juego, o null si no se encuentra.
      */
     private Long extractGameId(String html) {
         if (html == null)
@@ -276,6 +308,9 @@ public class WishlistIntegrationTest {
 
     /**
      * Codifica una cadena para ser usada en application/x-www-form-urlencoded.
+     * 
+     * @param value Cadena a codificar.
+     * @return Cadena codificada en UTF-8.
      */
     private String encode(String value) {
         try {
