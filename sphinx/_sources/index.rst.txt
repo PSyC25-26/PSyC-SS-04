@@ -13,10 +13,5 @@ documentation for details.
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contenido
+   :caption: Contents:
 
-
-API Reference
--------------
-
-* `Doxygen API Reference <../doxygen/index.html>`_
