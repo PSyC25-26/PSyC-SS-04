@@ -29,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 /**
+ * @defgroup tests_rendimiento Tests de Rendimiento
  * Unit-level performance test for IgdbService.parseGameResponse().
  *
  * Level: unit — tests the response parsing path directly with a pre-built fixture;

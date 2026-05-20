@@ -20,6 +20,7 @@ import java.util.Optional;
 import static org.mockito.Mockito.when;
 
 /**
+ * @defgroup tests_rendimiento Tests de Rendimiento
  * Unit-level performance test for UsuarioService.loadUserByUsername().
  *
  * Level: unit — UsuarioRepositorio is mocked; no DB.

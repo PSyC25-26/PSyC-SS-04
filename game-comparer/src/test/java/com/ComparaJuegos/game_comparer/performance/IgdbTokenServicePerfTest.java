@@ -21,6 +21,7 @@ import static org.mockito.Mockito.when;
 import java.util.Map;
 
 /**
+ * @defgroup tests_rendimiento Tests de Rendimiento
  * Unit-level performance test for IgdbTokenService.getToken() — cache-hit path.
  *
  * Level: unit — no HTTP calls; the token cache is pre-populated via ReflectionTestUtils.

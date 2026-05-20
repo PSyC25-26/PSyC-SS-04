@@ -23,6 +23,7 @@ import java.util.concurrent.atomic.LongAdder;
 import static org.junit.jupiter.api.Assertions.fail;
 
 /**
+ * @defgroup tests_rendimiento Tests de Rendimiento
  * JUnit 6 compatible performance test runner.
  *
  * JUnitPerf ≤1.25.0 calls ExtensionContext.getRequiredTestInstance() from background

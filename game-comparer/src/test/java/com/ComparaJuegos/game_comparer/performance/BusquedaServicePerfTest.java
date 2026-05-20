@@ -37,7 +37,22 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 /**
- * Unit-level performance and structural coverage test for BusquedaService.
+ * @defgroup tests_rendimiento Tests de Rendimiento
+ * Unit-level performance test for BusquedaService.buscar().
+ *
+ * Level: unit — IgdbService and CheapSharkService are mocked; no DB, no HTTP.
+ * Hot spot: the orchestration loop that pairs IGDB results with CheapShark
+ * prices and builds ResultadoBusquedaDTO objects.
+ *
+ * Performance specification:
+ *   Scope          : BusquedaService.buscar() with mocked dependencies
+ *   Concurrent users: 20 threads
+ *   Workload mix   : single query "witcher", returns 3 IGDB games each priced
+ *   Time requirement: meanLatency <= 10 ms, >= 80 executions/sec
+ *
+ * Note: JUnitPerf ≤1.25.0 is incompatible with JUnit Jupiter 6.x (Spring Boot 4.x)
+ * because it calls ExtensionContext.getRequiredTestInstance() from background threads.
+ * PerformanceTestRunner provides equivalent behaviour and reads the annotations below.
  */
 @ExtendWith(MockitoExtension.class)
 class BusquedaServicePerfTest {

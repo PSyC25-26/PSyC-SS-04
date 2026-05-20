@@ -24,6 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 /**
+ * @defgroup test_config Tests de Configuracion
  * @class TestSecurityConfig
  * @brief Configuración de seguridad para el perfil "test".
  *
