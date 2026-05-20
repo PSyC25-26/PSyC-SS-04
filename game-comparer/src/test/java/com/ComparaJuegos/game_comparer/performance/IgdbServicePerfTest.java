@@ -1,5 +1,6 @@
 package com.ComparaJuegos.game_comparer.performance;
 
+import com.ComparaJuegos.game_comparer.dto.IgdbJuegoDTO;
 import com.ComparaJuegos.game_comparer.service.IgdbService;
 import com.ComparaJuegos.game_comparer.service.IgdbTokenService;
 import com.github.noconnor.junitperf.JUnitPerfTest;
@@ -13,11 +14,19 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.client.RestClient;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.*;
 
 /**
  * Unit-level performance test for IgdbService.parseGameResponse().
@@ -76,6 +85,9 @@ class IgdbServicePerfTest {
     @Mock
     private IgdbTokenService mockTokenService;
 
+    @Mock 
+    private RestClient mockRestClient;
+
     private IgdbService igdbService;
 
     @BeforeEach
@@ -94,5 +106,63 @@ class IgdbServicePerfTest {
             var results = igdbService.parseGameResponse(IGDB_RESPONSE);
             if (results.isEmpty()) throw new AssertionError("results must not be empty");
         });
+    }
+
+    @Test
+    void parseGameResponse_WhenResponseIsNull_ReturnsEmptyList() {
+        List<IgdbJuegoDTO> results = igdbService.parseGameResponse(null);
+        assertNotNull(results);
+        assertTrue(results.isEmpty());
+    }
+
+    @Test
+    void parseGameResponse_WithMissingAndExternalData_PisesAllBranches() {
+        // Construimos un mapa mutable con datos vacíos para obligar a pasar por los bloques 'if (X == null)'
+        Map<String, Object> brokenGame = new HashMap<>();
+        brokenGame.put("id", 9999L);
+        brokenGame.put("name", "Juego Incompleto");
+        brokenGame.put("cover", null); 
+        brokenGame.put("genres", null); 
+        brokenGame.put("first_release_date", null); 
+
+        // Añadimos datos de tiendas para forzar category 1 y category 26
+        List<Map<String, Object>> externalGames = new ArrayList<>();
+        
+        Map<String, Object> steamGame = new HashMap<>();
+        steamGame.put("category", 1);
+        steamGame.put("uid", "steam123");
+        externalGames.add(steamGame);
+
+        Map<String, Object> epicGame = new HashMap<>();
+        epicGame.put("category", 26);
+        epicGame.put("uid", "epic-slug");
+        externalGames.add(epicGame);
+
+        // Añadimos una compañía rota (sin sub-objeto company) para cubrir la línea 'if (company == null) continue;'
+        List<Map<String, Object>> companies = new ArrayList<>();
+        Map<String, Object> brokenCompany = new HashMap<>();
+        brokenCompany.put("company", null);
+        companies.add(brokenCompany);
+
+        brokenGame.put("external_games", externalGames);
+        brokenGame.put("involved_companies", companies);
+
+        List<Map<String, Object>> rawResponse = List.of(brokenGame);
+        List<IgdbJuegoDTO> parsed = igdbService.parseGameResponse(rawResponse);
+
+        assertFalse(parsed.isEmpty());
+        assertEquals("steam123", parsed.get(0).getSteamAppId());
+        assertEquals("epic-slug", parsed.get(0).getEpicSlug());
+        assertNull(parsed.get(0).getCoverUrl());
+    }
+
+    @Test
+    void buscar_WhenExceptionOccurs_ReturnsEmptyList() {
+        // Rompemos la llamada justo al principio usando any()
+        lenient().when(mockRestClient.post()).thenThrow(new RuntimeException("API caida temporalmente"));
+
+        List<IgdbJuegoDTO> results = igdbService.buscar("error-query");
+        assertNotNull(results);
+        assertTrue(results.isEmpty());
     }
 }
