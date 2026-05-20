@@ -36,3 +36,5 @@ build/
 src/test/resources/application.properties
 .env
 .env.local
+
+docs/_build/
