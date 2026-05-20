@@ -85,3 +85,24 @@ jobs:
           publish_dir: ./game-comparer/docs/_build/html
           destination_dir: sphinx
           keep_files: true
+
+  doxygen:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/test-sphinx')
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Doxygen
+        run: sudo apt-get install -y doxygen
+
+      - name: Generate Doxygen
+        run: doxygen game-comparer/Doxyfile
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./game-comparer/doxygen-output/html
+          destination_dir: doxygen
+          keep_files: true
