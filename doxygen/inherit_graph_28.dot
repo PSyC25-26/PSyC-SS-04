@@ -5,5 +5,5 @@ digraph "Graphical Class Hierarchy"
   edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
   node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
   rankdir="LR";
-  Node0 [id="Node000000",label="UserInterface.principalUser\lInterfaceTest",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$classUserInterface_1_1principalUserInterfaceTest.html",tooltip="Clase de pruebas de interfaz para la pantalla inicial de la aplicación."];
+  Node0 [id="Node000000",label="UserInterface.detalleWishlist\lUserInterfaceTest",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$classUserInterface_1_1detalleWishlistUserInterfaceTest.html",tooltip=" "];
 }

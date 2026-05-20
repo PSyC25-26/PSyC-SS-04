@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['gamecomparerapplication_2ejava_0',['GameComparerApplication.java',['../GameComparerApplication_8java.html',1,'']]]
+  ['detallewishlistuserinterfacetest_2ejava_0',['detalleWishlistUserInterfaceTest.java',['../detalleWishlistUserInterfaceTest_8java.html',1,'']]]
 ];

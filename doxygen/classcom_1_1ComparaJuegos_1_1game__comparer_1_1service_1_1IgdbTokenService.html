@@ -79,15 +79,24 @@ $(function() {
   <div class="headertitle"><div class="title">com.ComparaJuegos.game_comparer.service.IgdbTokenService Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Servicio de gestión del token OAuth2 para la API de IGDB.  
+ <a href="classcom_1_1ComparaJuegos_1_1game__comparer_1_1service_1_1IgdbTokenService.html#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a4c59fcc5d725b651a1ea7b0111fadd71" id="r_a4c59fcc5d725b651a1ea7b0111fadd71"><td class="memItemLeft" align="right" valign="top">synchronized String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcom_1_1ComparaJuegos_1_1game__comparer_1_1service_1_1IgdbTokenService.html#a4c59fcc5d725b651a1ea7b0111fadd71">getToken</a> ()</td></tr>
+<tr class="memdesc:a4c59fcc5d725b651a1ea7b0111fadd71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Devuelve un token de acceso válido para la API de IGDB.  <br /></td></tr>
 <tr class="separator:a4c59fcc5d725b651a1ea7b0111fadd71"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaf85b90863580362ed17a8c37a885f9c" id="r_aaf85b90863580362ed17a8c37a885f9c"><td class="memItemLeft" align="right" valign="top">String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcom_1_1ComparaJuegos_1_1game__comparer_1_1service_1_1IgdbTokenService.html#aaf85b90863580362ed17a8c37a885f9c">getClientId</a> ()</td></tr>
+<tr class="memdesc:aaf85b90863580362ed17a8c37a885f9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Devuelve el Client ID de IGDB configurado en las propiedades de la aplicación.  <br /></td></tr>
 <tr class="separator:aaf85b90863580362ed17a8c37a885f9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Servicio de gestión del token OAuth2 para la API de IGDB. </p>
+<p>Obtiene y cachea el token de acceso de Twitch necesario para autenticar las peticiones a la API de IGDB. El token se renueva automáticamente 60 segundos antes de su expiración para evitar peticiones fallidas.</p>
+<p>El método getToken() es <code class="JavaDocCode">synchronized</code> para garantizar que bajo carga concurrente solo un hilo renueva el token a la vez. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="aaf85b90863580362ed17a8c37a885f9c" name="aaf85b90863580362ed17a8c37a885f9c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aaf85b90863580362ed17a8c37a885f9c">&#9670;&#160;</a></span>getClientId()</h2>
 
@@ -110,6 +119,10 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Devuelve el Client ID de IGDB configurado en las propiedades de la aplicación. </p>
+<p>Usado por <code><a class="el" href="">IgdbService</a></code> para incluir el header <code class="JavaDocCode">Client-ID</code> en cada petición a la API de IGDB.</p>
+<dl class="section return"><dt>Returns</dt><dd>El valor de la propiedad <code class="JavaDocCode">igdb.client-id</code>. </dd></dl>
 
 </div>
 </div>
@@ -135,6 +148,10 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Devuelve un token de acceso válido para la API de IGDB. </p>
+<p>Si el token en caché existe y no ha expirado, se devuelve directamente sin realizar ninguna llamada a la red. En caso contrario, solicita un nuevo token al endpoint OAuth2 de Twitch y lo almacena en caché.</p>
+<dl class="section return"><dt>Returns</dt><dd>Token de acceso Bearer válido para usar en las peticiones a IGDB. </dd></dl>
 
 </div>
 </div>
