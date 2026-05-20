@@ -25,6 +25,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 /**
+ * @defgroup tests_rendimiento Tests de Rendimiento
  * Unit-level performance test for BusquedaService.buscar().
  *
  * Level: unit — IgdbService and CheapSharkService are mocked; no DB, no HTTP.

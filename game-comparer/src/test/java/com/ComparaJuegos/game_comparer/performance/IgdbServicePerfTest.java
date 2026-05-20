@@ -20,6 +20,7 @@ import java.util.Map;
 import static org.mockito.Mockito.when;
 
 /**
+ * @defgroup tests_rendimiento Tests de Rendimiento
  * Unit-level performance test for IgdbService.parseGameResponse().
  *
  * Level: unit — tests the response parsing path directly with a pre-built fixture;

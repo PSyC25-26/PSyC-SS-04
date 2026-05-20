@@ -12,6 +12,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.time.Instant;
 
 /**
+ * @defgroup tests_rendimiento Tests de Rendimiento
  * Unit-level performance test for IgdbTokenService.getToken() — cache-hit path.
  *
  * Level: unit — no HTTP calls; the token cache is pre-populated via ReflectionTestUtils.

@@ -48,6 +48,7 @@ import com.ComparaJuegos.game_comparer.models.Usuario;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
+ * @defgroup test_integracion Tests de Integracion
  * Clase de test de integración para el flujo de wishlists.
  * Configura un entorno de pruebas con perfil "test", desactiva la seguridad
  * y utiliza un RestTemplate simple para realizar peticiones HTTP.

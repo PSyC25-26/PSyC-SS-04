@@ -1,5 +1,6 @@
 PROJECT_NAME           = "ComparaJuegos"
-INPUT                  = game-comparer/src/main/java
+INPUT = game-comparer/src/main/java \
+        game-comparer/src/test/java
 RECURSIVE              = YES
 OUTPUT_DIRECTORY       = game-comparer/doxygen-output
 GENERATE_HTML          = YES

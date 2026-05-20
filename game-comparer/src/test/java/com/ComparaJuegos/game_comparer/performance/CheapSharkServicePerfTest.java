@@ -19,6 +19,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
+ * @defgroup tests_rendimiento Tests de Rendimiento
  * Unit-level performance test for CheapSharkService.buscarPrecios().
  *
  * Level: unit — RestClient is mocked via deep stubs; no real HTTP calls.
