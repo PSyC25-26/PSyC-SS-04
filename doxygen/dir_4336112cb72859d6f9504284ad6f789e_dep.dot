@@ -1,0 +1,12 @@
+digraph "game-comparer/src/test/java/UserInterface"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
+  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
+  compound=true
+  subgraph clusterdir_a29e90530d5635bf08743265cab74a63 {
+    graph [ bgcolor="#edf0f7", pencolor="grey50", label="java", fontname=Helvetica,fontsize=10 style="filled,dashed", URL="dir_a29e90530d5635bf08743265cab74a63.html",tooltip=""]
+  dir_4336112cb72859d6f9504284ad6f789e [label="UserInterface", fillcolor="#edf0f7", color="grey25", style="filled,bold", URL="dir_4336112cb72859d6f9504284ad6f789e.html",tooltip=""];
+  }
+}
