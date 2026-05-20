@@ -17,6 +17,7 @@ Comparador de precios de videojuegos con sistema de wishlists. Permite buscar ju
 - **IGDB API** — metadatos de juegos (género, descripción, fecha de lanzamiento, portada)
 - **CheapShark API** — precios de tiendas (Steam, Epic Games Store)
 - **Docker** — contenerización de la aplicación y la base de datos
+- **Sphinx** — documentación del código automáticamente
 
 ---
 
