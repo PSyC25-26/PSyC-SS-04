@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+
+<html lang="ES" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Guía de uso &#8212; documentación de ComparaJuegos - 1.0</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=9f8e992f"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Índice" href="genindex.html" />
+    <link rel="search" title="Búsqueda" href="search.html" />
+    <link rel="next" title="Arquitectura" href="arquitectura.html" />
+    <link rel="prev" title="Instalación y puesta en marcha" href="instalacion.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="guia-de-uso">
+<h1>Guía de uso<a class="headerlink" href="#guia-de-uso" title="Link to this heading">¶</a></h1>
+<section id="paginas-y-navegacion">
+<h2>Páginas y navegación<a class="headerlink" href="#paginas-y-navegacion" title="Link to this heading">¶</a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Ruta</p></th>
+<th class="head"><p>Vista</p></th>
+<th class="head"><p>Acceso</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/</span></code> o <code class="docutils literal notranslate"><span class="pre">/iniciar</span></code></p></td>
+<td><p>Página principal con botones de registro/login</p></td>
+<td><p>Público</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">/registro</span></code></p></td>
+<td><p>Formulario de registro</p></td>
+<td><p>Público</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/inicioSesion</span></code></p></td>
+<td><p>Formulario de login</p></td>
+<td><p>Público</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">/buscar</span></code></p></td>
+<td><p>Buscador de juegos con precios</p></td>
+<td><p>Autenticado</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/perfil</span></code></p></td>
+<td><p>Panel de usuario y gestión de wishlists</p></td>
+<td><p>Autenticado</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">/wishlist/{id}</span></code></p></td>
+<td><p>Detalle de una wishlist con precios actualizados</p></td>
+<td><p>Autenticado</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<hr class="docutils" />
+<section id="flujo-de-usuario">
+<h2>Flujo de usuario<a class="headerlink" href="#flujo-de-usuario" title="Link to this heading">¶</a></h2>
+<p>Tras hacer login, el usuario es redirigido a <code class="docutils literal notranslate"><span class="pre">/buscar</span></code>.
+Todas las vistas autenticadas incluyen una barra de navegación con acceso a:</p>
+<ul class="simple">
+<li><p><strong>Buscar</strong> — buscador de juegos</p></li>
+<li><p><strong>Mi Perfil</strong> — gestión de wishlists</p></li>
+<li><p><strong>Cerrar Sesión</strong></p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="buscar-juegos">
+<h2>Buscar juegos<a class="headerlink" href="#buscar-juegos" title="Link to this heading">¶</a></h2>
+<p>En la vista <code class="docutils literal notranslate"><span class="pre">/buscar</span></code> el usuario puede introducir el nombre de un juego y ver:</p>
+<ul class="simple">
+<li><p>Metadatos del juego (portada, género, descripción, fecha de lanzamiento) desde <strong>IGDB</strong></p></li>
+<li><p>Precio actual en <strong>Steam</strong></p></li>
+<li><p>Precio actual en <strong>Epic Games Store</strong></p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="wishlists">
+<h2>Wishlists<a class="headerlink" href="#wishlists" title="Link to this heading">¶</a></h2>
+<p>Desde <code class="docutils literal notranslate"><span class="pre">/perfil</span></code> el usuario puede:</p>
+<ul class="simple">
+<li><p>Crear wishlists personalizadas</p></li>
+<li><p>Añadir juegos a una wishlist desde la búsqueda</p></li>
+<li><p>Ver el detalle de cada wishlist en <code class="docutils literal notranslate"><span class="pre">/wishlist/{id}</span></code> con los precios actualizados en tiempo real</p></li>
+<li><p>Eliminar juegos de una wishlist</p></li>
+</ul>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">ComparaJuegos</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Ir a" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navegación</h3>
+<p class="caption" role="heading"><span class="caption-text">Guías</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="instalacion.html">Instalación y puesta en marcha</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Guía de uso</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#paginas-y-navegacion">Páginas y navegación</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#flujo-de-usuario">Flujo de usuario</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#buscar-juegos">Buscar juegos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#wishlists">Wishlists</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Documentación técnica</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="arquitectura.html">Arquitectura</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tests.html">Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api-externas.html">APIs externas</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Referencia</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api-reference.html">API Reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="instalacion.html" title="capítulo anterior">Instalación y puesta en marcha</a></li>
+      <li>Next: <a href="arquitectura.html" title="próximo capítulo">Arquitectura</a></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2026, PSyC-SS-04.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.0.4</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/uso.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
