@@ -1,7 +1,10 @@
 var searchData=
 [
-  ['findappidbyname_0',['findAppIdByName',['../classcom_1_1ComparaJuegos_1_1game__comparer_1_1service_1_1SteamService.html#a6ba47da5161bc2511d22f3b6cfd41249',1,'com::ComparaJuegos::game_comparer::service::SteamService']]],
-  ['findbyemail_1',['findByEmail',['../interfacecom_1_1ComparaJuegos_1_1game__comparer_1_1UsuarioRepositorio.html#ac581fc1419ca31a2728e7208ebd06aa7',1,'com::ComparaJuegos::game_comparer::UsuarioRepositorio']]],
-  ['findbyusuario_2',['findByUsuario',['../interfacecom_1_1ComparaJuegos_1_1game__comparer_1_1WishlistRepositorio.html#a9338477f06bb4b462b686948887c7491',1,'com::ComparaJuegos::game_comparer::WishlistRepositorio']]],
-  ['findfirstbynameignorecase_3',['findFirstByNameIgnoreCase',['../interfacecom_1_1ComparaJuegos_1_1game__comparer_1_1JuegoRepositorio.html#ac9aca6caa255afe9a254422675a24efa',1,'com::ComparaJuegos::game_comparer::JuegoRepositorio']]]
+  ['gamecomparerapplication_0',['GameComparerApplication',['../classcom_1_1ComparaJuegos_1_1game__comparer_1_1GameComparerApplication.html',1,'com::ComparaJuegos::game_comparer']]],
+  ['gamecomparerapplication_2ejava_1',['GameComparerApplication.java',['../GameComparerApplication_8java.html',1,'']]],
+  ['getclientid_2',['getClientId',['../classcom_1_1ComparaJuegos_1_1game__comparer_1_1service_1_1IgdbTokenService.html#aaf85b90863580362ed17a8c37a885f9c',1,'com::ComparaJuegos::game_comparer::service::IgdbTokenService']]],
+  ['getofertashome_3',['getOfertasHome',['../classcom_1_1ComparaJuegos_1_1game__comparer_1_1service_1_1BusquedaService.html#aeeab0bdd31c957cc3990c581758f49be',1,'com::ComparaJuegos::game_comparer::service::BusquedaService']]],
+  ['getsteamprice_4',['getSteamPrice',['../classcom_1_1ComparaJuegos_1_1game__comparer_1_1service_1_1SteamService.html#a939cf6fdf9540d862c86f800db9dcca6',1,'com::ComparaJuegos::game_comparer::service::SteamService']]],
+  ['getsteamurl_5',['getSteamUrl',['../classcom_1_1ComparaJuegos_1_1game__comparer_1_1service_1_1SteamService.html#a2147aea2ccff0cf4ca72edbb315c4af5',1,'com::ComparaJuegos::game_comparer::service::SteamService']]],
+  ['gettoken_6',['getToken',['../classcom_1_1ComparaJuegos_1_1game__comparer_1_1service_1_1IgdbTokenService.html#a4c59fcc5d725b651a1ea7b0111fadd71',1,'com::ComparaJuegos::game_comparer::service::IgdbTokenService']]]
 ];
