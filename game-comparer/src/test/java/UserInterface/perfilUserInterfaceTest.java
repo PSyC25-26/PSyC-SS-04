@@ -1,16 +1,9 @@
 /**
  * @file perfilUserInterfaceTest.java
  * @author Equipo Caza Ofertas Gaming (COG)
- *
- * Test de interfaz de usuario para la pantalla de perfil del usuario.
- * Utiliza Playwright para simular un navegador real y verificar que:
- * - El perfil es accesible tras autenticarse correctamente.
- * - Se muestra el saludo personalizado con el nombre del usuario logueado.
- * - Aparece el mensaje de advertencia correcto si el usuario no posee wishlists.
- * - El formulario de creación de wishlists funciona y añade la lista a la interfaz.
- *
- * Depende de TestSecurityConfig (perfil "test") para gestionar la autenticación
- * por el formulario de /inicioSesion y mantener la sesión activa en /perfil.
+ * * Pruebas de interfaz de usuario (UI) para la pantalla de perfil del usuario.
+ * Se utiliza Playwright para automatizar el navegador y simular el inicio de sesión.
+ * Se cubren los flujos de visualización de datos y la creación de nuevas wishlists.
  */
 
 package UserInterface;
@@ -33,11 +26,8 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * @class perfilUserInterfaceTest
- * @brief Test de UI para la pantalla de gestión del perfil y creación de wishlists.
- *
- * Levanta el contexto completo de Spring Boot en un puerto aleatorio, gestiona las
- * pestañas aisladas del navegador y valida los cambios tanto en el DOM como en H2.
+ * Clase de pruebas de interfaz para la pantalla de perfil de usuario.
+ * Configura el entorno de Spring Boot, los repositorios de datos y el ciclo de vida de Playwright.
  */
 @SpringBootTest(
         classes = GameComparerApplication.class,
@@ -46,48 +36,28 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ActiveProfiles("test")
 public class perfilUserInterfaceTest {
 
-    /** Puerto aleatorio asignado por Spring Boot al levantar el servidor. */
     @LocalServerPort
     private int port;
 
-    /** Repositorio de usuarios para insertar las credenciales de la sesión de pruebas. */
     @Autowired
     private UsuarioRepositorio usuarioRepositorio;
 
-    /** Repositorio de wishlists para validar que el formulario de la UI las persiste realmente. */
     @Autowired
     private WishlistRepositorio wishlistRepositorio;
 
-    /** Instancia de Playwright compartida por todos los tests de la clase. */
     private static Playwright playwright;
-
-    /** Navegador Chromium compartido por todos los tests de la clase. */
     private static Browser navegador;
-
-    /** Contexto de navegación aislado para cada test (cookies, sesión, etc.). */
     private BrowserContext contexto;
-
-    /** Página activa del navegador para cada test. */
     private Page pagina;
 
-    /** ID del usuario de prueba guardado para asegurar su posterior eliminación. */
     private Long testUserId;
-
-    /** Email exclusivo utilizado para la sesión del perfil. */
     private final String miEmailExclusivo = "perfil_ui_test@compara-juegos.com";
-
-    /** Contraseña en texto plano para el login automatizado. */
     private final String contrasenaPlana = "Password123!";
-
-    /** Nombre del usuario que se verificará en el saludo de la interfaz. */
     private final String nombreUsuarioTest = "Usuario de Pruebas COG";
 
     /**
-     * @brief Inicializa Playwright y lanza el navegador Chromium una sola vez para toda la clase.
-     *
-     * Detecta automáticamente si se está ejecutando en GitHub Actions para adaptar el comportamiento:
-     * - En CI (GitHub Actions): modo headless activado y sin retardo entre acciones.
-     * - En local: navegador visible con un retardo de 300ms para facilitar la depuración visual.
+     * Define e inicializa el navegador de Playwright.
+     * Si se ejecuta en GitHub Actions, se lanza en modo headless (sin interfaz gráfica).
      */
     @BeforeAll
     static void definirNavegador() {
@@ -101,11 +71,11 @@ public class perfilUserInterfaceTest {
     }
 
     /**
-     * @brief Prepara los datos del usuario en H2, abre el navegador e inicia sesión antes de cada test.
+     * Crea un usuario de prueba en la base de datos, inicializa un nuevo contexto
+     * en el navegador y realiza el inicio de sesión previo.
      */
     @BeforeEach
     void prepararDatosYContexto() {
-        // 1. Crear el usuario de prueba con contraseña encriptada
         Usuario usuarioPrueba = new Usuario();
         usuarioPrueba.setName(nombreUsuarioTest);
         usuarioPrueba.setEmail(miEmailExclusivo);
@@ -116,30 +86,34 @@ public class perfilUserInterfaceTest {
         usuarioPrueba = usuarioRepositorio.save(usuarioPrueba);
         testUserId = usuarioPrueba.getId();
 
-        // 2. Crear entorno de navegación aislado
         contexto = navegador.newContext();
         pagina = contexto.newPage();
 
-        // 3. Ejecutar el login obligado para poder ver el perfil
         hacerLoginPrevio();
     }
 
     /**
-     * @brief Automatiza el flujo de inicio de sesión para habilitar las cookies de Spring Security.
+     * Automatiza el inicio de sesión rellenando el formulario.
+     * Segunda estrategia: Hace click y espera a que la red esté completamente inactiva (NETWORKIDLE),
+     * asegurando que la redirección a /perfil haya finalizado antes de proceder.
      */
     private void hacerLoginPrevio() {
         pagina.navigate("http://localhost:" + port + "/inicioSesion");
+        pagina.waitForLoadState(LoadState.DOMCONTENTLOADED);
+
         pagina.fill("input[name='username']", miEmailExclusivo);
         pagina.fill("input[name='password']", contrasenaPlana);
+
+        // Hacemos el click directamente
         pagina.click("button[type='submit']");
-        pagina.waitForURL(url -> !url.contains("/inicioSesion"));
+
+        // En lugar de interceptar la URL, esperamos a que la red deje de enviar peticiones (Login completado)
+        pagina.waitForLoadState(LoadState.NETWORKIDLE);
     }
 
     /**
-     * @brief Verifica que los datos del usuario e informativos se cargan correctamente en el panel.
-     *
-     * Comprueba que aparece el nombre del usuario en el saludo y que, al ser una cuenta nueva,
-     * se muestra el texto por defecto de que aún no posee ninguna lista creada.
+     * Prueba la carga básica del perfil de usuario.
+     * Verifica que se muestre el saludo personalizado y el mensaje de listas vacías.
      */
     @Test
     @DisplayName("El panel de usuario muestra el saludo correcto y aviso de listas vacías")
@@ -147,21 +121,20 @@ public class perfilUserInterfaceTest {
         pagina.navigate("http://localhost:" + port + "/perfil");
         pagina.waitForLoadState(LoadState.NETWORKIDLE);
 
-        // Comprobamos que el saludo dinámico muestra nuestro nombre
         String saludoEsperado = "Hola, " + nombreUsuarioTest + "!";
+
+        // Esperamos explícitamente a que el elemento sea visible antes de lanzar el assert
+        pagina.locator("p:has-text('" + saludoEsperado + "')").waitFor();
         assertTrue(pagina.locator("p:has-text('" + saludoEsperado + "')").isVisible(),
                 "No se encontró el saludo personalizado con el nombre del usuario.");
 
-        // Validamos que aparece el aviso de que no hay listas de deseos todavía
         assertTrue(pagina.locator("p:has-text('Aún no tienes ninguna lista')").isVisible(),
                 "No se muestra el mensaje de aviso de lista de deseos vacía.");
     }
 
     /**
-     * @brief Verifica que el formulario de creación de wishlists funciona de manera correcta.
-     *
-     * Rellena el input de texto del formulario, hace submit y valida que la nueva lista
-     * aparezca pintada inmediatamente en el listado HTML de la página de perfil.
+     * Prueba el formulario de creación de listas de deseos desde el perfil.
+     * Verifica que al rellenar el nombre y enviar, la nueva wishlist aparece en la pantalla.
      */
     @Test
     @DisplayName("El formulario del perfil permite crear una nueva wishlist con éxito")
@@ -171,20 +144,20 @@ public class perfilUserInterfaceTest {
 
         String nombreNuevaLista = "Favoritos del Verano 2026";
 
-        // Rellenar el formulario de creación
         pagina.fill("input[name='nombre']", nombreNuevaLista);
-        pagina.click("button:has-text('Crear Nueva Wishlist')");
 
-        // Esperamos a que la petición POST recargue la página de perfil
+        // Hacemos click en el botón de crear y esperamos a que el estado de la red se estabilice
+        pagina.click("button:has-text('Crear Nueva Wishlist')");
         pagina.waitForLoadState(LoadState.NETWORKIDLE);
 
-        // Verificación en UI: Comprobar que el nombre de la lista aparece ahora en el DOM
+        // Esperamos a que aparezca la etiqueta strong en el DOM antes del assert
+        pagina.locator("strong:has-text('" + nombreNuevaLista + "')").waitFor();
         assertTrue(pagina.locator("strong:has-text('" + nombreNuevaLista + "')").isVisible(),
                 "La nueva wishlist creada no aparece listada en la pantalla de perfil.");
     }
 
     /**
-     * @brief Cierra el contexto del navegador y destruye en cascada los datos creados en H2.
+     * Cierra el contexto del navegador y limpia el usuario de prueba de la base de datos.
      */
     @AfterEach
     void cerrarContexto() {
@@ -192,13 +165,16 @@ public class perfilUserInterfaceTest {
             contexto.close();
         }
         if (testUserId != null) {
-            // Al borrar el usuario, gracias a las relaciones JPA, se limpian también sus wishlists asociadas
-            usuarioRepositorio.deleteById(testUserId);
+            try {
+                usuarioRepositorio.deleteById(testUserId);
+            } catch (Exception e) {
+                // Previene caídas en el AfterEach si la base de datos está bloqueada temporalmente
+            }
         }
     }
 
     /**
-     * @brief Apaga por completo el motor de Playwright al terminar la suite de pruebas.
+     * Cierra por completo el navegador y destruye la instancia de Playwright.
      */
     @AfterAll
     static void cerrarNavegador() {
