@@ -5,6 +5,7 @@ on:
     branches: 
       - "main"
       - "test-actions"
+      - "test-sphinx"
   pull_request:
     branches: 
       - "main"
@@ -49,7 +50,7 @@ jobs:
           IGDB_CLIENT_SECRET: ${{ secrets.IGDB_CLIENT_SECRET }}
   docs:
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/test-sphinx')
 
     steps:
       - uses: actions/checkout@v4
@@ -62,13 +63,25 @@ jobs:
       - name: Install Sphinx
         run: pip install sphinx sphinx-rtd-theme myst-parser
 
+      - name: Debug estructura
+        run: |
+          echo "_________ Raiz del repo _________"
+          ls -la
+          echo "_________ Buscar conf.py _________"
+          find . -name "conf.py"
+
       - name: Build HTML
         run: sphinx-build game-comparer/docs/ game-comparer/docs/_build/html
+
+      - name: Verificar output
+        run: |
+          echo "_________ Contenido _build _________"
+          ls -la game-comparer/docs/_build/html/
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .game-comparer/docs/_build/html
+          publish_dir: ./game-comparer/docs/_build/html
           destination_dir: sphinx
           keep_files: true
