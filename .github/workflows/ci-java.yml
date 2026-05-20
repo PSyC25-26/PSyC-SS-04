@@ -5,6 +5,7 @@ on:
     branches: 
       - "main"
       - "test-actions"
+      - "test-sphinx"
   pull_request:
     branches: 
       - "main"
@@ -81,6 +82,6 @@ jobs:
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .game-comparer/docs/_build/html
+          publish_dir: ./game-comparer/docs/_build/html
           destination_dir: sphinx
           keep_files: true
