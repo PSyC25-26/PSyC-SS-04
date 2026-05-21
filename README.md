@@ -1,8 +1,12 @@
 ![Java CI](https://github.com/PSyC25-26/PSyC-SS-04/actions/workflows/ci-java.yml/badge.svg)
 
+
+
 # Caza Ofertas Gaming
 
 Comparador de precios de videojuegos con sistema de wishlists. Permite buscar juegos, ver su precio en Steam y Epic Games Store en tiempo real, y guardarlos en listas personalizadas.
+
+[Enlace a la documentación](https://psyc25-26.github.io/PSyC-SS-04/sphinx/)
 
 ---
 
